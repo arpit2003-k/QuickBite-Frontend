@@ -1,0 +1,67 @@
+<div class="container d-flex justify-content-center align-items-center mb-5 mt-5 animate-fade-in" style="min-height: 80vh;">
+  <div class="card glass-panel border-0" style="width: 25rem;">
+    <div class="card-body p-5">
+      <div class="text-center mb-4">
+        <i class="bi bi-person-circle display-4 text-primary-custom mb-3 d-inline-block"></i>
+        <h3 class="card-title fw-bold">Sign In</h3>
+        <p class="text-muted small">Welcome back to QuickBite!</p>
+      </div>
+      
+      <div *ngIf="errorMessage" class="alert alert-danger rounded-3 p-3 shadow-sm" role="alert">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i> {{ errorMessage }}
+      </div>
+
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <div class="mb-4">
+          <label for="email" class="form-label fw-bold text-muted small text-uppercase">Email address</label>
+          <div class="input-group">
+            <span class="input-group-text bg-transparent border-end-0"><i class="bi bi-envelope text-muted"></i></span>
+            <input type="email" id="email" class="form-control border-start-0 ps-0" formControlName="email" 
+                   [class.is-invalid]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched"
+                   placeholder="name@example.com">
+            <div class="invalid-feedback pt-1">
+              Please enter a valid email address.
+            </div>
+          </div>
+        </div>
+
+        <div class="mb-5">
+          <label for="password" class="form-label fw-bold text-muted small text-uppercase">Password</label>
+          <div class="input-group">
+            <span class="input-group-text bg-transparent border-end-0"><i class="bi bi-lock text-muted"></i></span>
+            <input type="password" id="password" class="form-control border-start-0 ps-0" formControlName="password"
+                   [class.is-invalid]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
+                   placeholder="••••••••">
+            <div class="invalid-feedback pt-1">
+              Password is required.
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100 mb-4 fw-bold rounded-pill py-3 shadow-sm" [disabled]="loginForm.invalid || isLoading">
+          <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+          Sign in
+        </button>
+      </form>
+
+      <div class="d-flex align-items-center my-4">
+        <hr class="flex-grow-1">
+        <span class="mx-3 text-muted small fw-bold">OR</span>
+        <hr class="flex-grow-1">
+      </div>
+
+      <div class="d-flex flex-column gap-2">
+        <a href="http://localhost:8080/oauth2/authorization/google" class="btn btn-outline-dark w-100 rounded-pill d-flex align-items-center justify-content-center py-2 shadow-sm">
+          <i class="bi bi-google me-2 text-danger"></i> Continue with Google
+        </a>
+        <a href="http://localhost:8080/oauth2/authorization/github" class="btn btn-outline-dark w-100 rounded-pill d-flex align-items-center justify-content-center py-2 shadow-sm">
+          <i class="bi bi-github me-2"></i> Continue with GitHub
+        </a>
+      </div>
+
+      <div class="text-center text-muted mt-4">
+        <p class="mb-0 small">Don't have an account? <br><a routerLink="/register" class="text-primary-custom text-decoration-none fw-bold mt-1 d-inline-block">Create an account</a></p>
+      </div>
+    </div>
+  </div>
+</div>

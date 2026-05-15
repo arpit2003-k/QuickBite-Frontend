@@ -1,0 +1,105 @@
+<div class="bg-dark text-white py-5 mb-4 shadow">
+  <div class="container-fluid">
+    <div class="row align-items-center">
+      <div class="col-md-8">
+        <h1 class="display-5 fw-bold mb-1">Admin Control Center</h1>
+        <p class="lead opacity-75 mb-0">Platform-wide management and oversight dashboard</p>
+      </div>
+      <div class="col-md-4 text-md-end pt-3 pt-md-0">
+        <div class="badge bg-danger rounded-pill px-4 py-2 fs-6">System Administrator</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid">
+  <ul class="nav nav-pills mb-4 gap-2 bg-white p-2 rounded-pill shadow-sm d-inline-flex border">
+    <li class="nav-item">
+      <a class="nav-link rounded-pill fw-bold text-dark" routerLink="/admin/users" routerLinkActive="active"><i class="bi bi-people me-2"></i>Users</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link rounded-pill fw-bold text-dark" routerLink="/admin/restaurants" routerLinkActive="active"><i class="bi bi-shop me-2"></i>Restaurants</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link rounded-pill fw-bold text-dark" routerLink="/admin/agents" routerLinkActive="active"><i class="bi bi-bicycle me-2"></i>Agents</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link rounded-pill fw-bold text-dark" routerLink="/admin/analytics" routerLinkActive="active"><i class="bi bi-graph-up-arrow me-2"></i>Analytics</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link rounded-pill fw-bold text-dark" routerLink="/admin/reviews" routerLinkActive="active"><i class="bi bi-star me-2"></i>Reviews</a>
+    </li>
+  </ul>
+
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h2 class="fw-bold mb-0">Delivery Agent Verification</h2>
+      <p class="text-muted small">Verify rider identities and vehicle documents</p>
+    </div>
+    <div class="btn-group rounded-pill shadow-sm bg-white p-1">
+      <button (click)="filter = 'PENDING'" [class.active]="filter === 'PENDING'" class="btn btn-sm px-4 rounded-pill">Pending</button>
+      <button (click)="filter = 'VERIFIED'" [class.active]="filter === 'VERIFIED'" class="btn btn-sm px-4 rounded-pill">Verified</button>
+    </div>
+  </div>
+
+  <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+    <div class="table-responsive">
+      <table class="table table-hover align-middle mb-0">
+        <thead class="bg-light text-muted small text-uppercase">
+          <tr>
+            <th class="ps-4">Rider</th>
+            <th>Contact</th>
+            <th>Vehicle</th>
+            <th>Status</th>
+            <th class="text-end pe-4">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let agent of filteredAgents">
+            <td class="ps-4">
+              <div class="d-flex align-items-center">
+                <div class="avatar-sm me-3 text-white rounded-circle bg-dark d-flex align-items-center justify-content-center fw-bold">
+                  {{ agent.fullName.charAt(0) }}
+                </div>
+                <div>
+                  <div class="fw-bold">{{ agent.fullName }}</div>
+                  <div class="text-muted small">User ID: {{ agent.userId }}</div>
+                </div>
+              </div>
+            </td>
+            <td>{{ agent.phone }}</td>
+            <td>
+              <div class="small fw-bold">{{ agent.vehicleType }}</div>
+              <div class="text-muted small">{{ agent.vehicleNumber }}</div>
+            </td>
+            <td>
+              <span class="badge rounded-pill" [ngClass]="agent.isVerified ? 'bg-success-subtle text-success border border-success' : 'bg-warning-subtle text-warning border border-warning'">
+                {{ agent.isVerified ? 'Verified' : 'Pending Verification' }}
+              </span>
+            </td>
+            <td class="text-end pe-4">
+              <button *ngIf="!agent.isVerified" (click)="verify(agent.agentId || agent.id)" class="btn btn-sm btn-success rounded-pill px-4">Verify</button>
+              <button *ngIf="agent.isVerified" (click)="revokeVerification(agent.agentId || agent.id)" class="btn btn-sm btn-outline-danger rounded-pill px-4">Revoke</button>
+            </td>
+          </tr>
+          <tr *ngIf="filteredAgents.length === 0 && !loading">
+            <td colspan="5" class="text-center py-5 text-muted">No {{ filter.toLowerCase() }} agents found</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<style>
+  .btn-group .active {
+    background-color: #000 !important;
+    color: white !important;
+  }
+</style>
+
+<style>
+  .avatar-sm { width: 40px; height: 40px; }
+  .bg-success-subtle { background-color: #d1e7dd; }
+  .bg-warning-subtle { background-color: #fff3cd; }
+</style>

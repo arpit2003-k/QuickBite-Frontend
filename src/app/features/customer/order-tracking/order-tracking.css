@@ -1,0 +1,199 @@
+.fade-in {
+  animation: fadeIn 0.4s ease-out;
+}
+
+.tracking-map-shell {
+  border: 1px solid #efe7da;
+  border-radius: 2rem;
+  background: linear-gradient(180deg, #fffaf4 0%, #ffffff 100%);
+  padding: 1.5rem;
+}
+
+.tracking-map-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: flex-start;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.tracking-kicker {
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: #b25c2f;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.tracking-map-canvas {
+  height: 360px;
+  border-radius: 1.5rem;
+  overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.45);
+}
+
+.distance-pill {
+  min-width: 170px;
+  padding: 0.85rem 1rem;
+  border-radius: 1.25rem;
+  background: #1f2937;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.distance-number {
+  font-size: 1.65rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.distance-unit,
+.distance-meta {
+  font-size: 0.85rem;
+  opacity: 0.85;
+}
+
+.route-insights {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0.9rem;
+  margin-top: 1rem;
+}
+
+.insight-card {
+  border-radius: 1.15rem;
+  background: #fff;
+  border: 1px solid #f0e2d4;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.insight-label {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #8b5e3c;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.order-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.timeline-step {
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+  min-height: 80px;
+}
+
+.step-icon-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.step-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  border: 4px solid #f8f9fa;
+  font-size: 1.5rem;
+  z-index: 2;
+  transition: all 0.3s ease;
+}
+
+.step-line {
+  position: absolute;
+  top: -50px;
+  width: 4px;
+  height: 80px;
+  background: #f8f9fa;
+  z-index: 1;
+}
+
+/* Tracking Status Logic */
+.timeline-step.completed .step-icon {
+  background: #198754;
+  color: white;
+  border-color: rgba(255,255,255,0.2);
+}
+
+.timeline-step.completed .step-line {
+  background: #198754;
+}
+
+.timeline-step.active .step-icon {
+  background: #dc3545;
+  color: white;
+  border-color: #ffdce0;
+  box-shadow: 0 0 0 8px rgba(220, 53, 69, 0.1);
+}
+
+.timeline-step.active .step-line {
+  background: #198754;
+}
+
+.timeline-step.active .step-label {
+  color: #dc3545;
+  font-size: 1.2rem;
+}
+
+.timeline-step.pending .step-icon {
+  color: #dee2e6;
+}
+
+.letter-spacing-1 {
+  letter-spacing: 1px;
+}
+
+.bg-indigo {
+  background-color: #6610f2 !important;
+}
+
+@media (min-width: 768px) {
+  .order-timeline {
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 5rem !important;
+  }
+  
+  .timeline-step {
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    flex: 1;
+    text-align: center;
+  }
+  
+  .step-line {
+    top: 50%;
+    left: -50%;
+    width: 100%;
+    height: 4px;
+    transform: translateY(-50%);
+  }
+}
+
+@media (max-width: 767px) {
+  .tracking-map-canvas {
+    height: 300px;
+  }
+}

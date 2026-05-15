@@ -1,0 +1,167 @@
+<div class="container my-5">
+  <div class="row">
+    <div class="col-md-10 mx-auto">
+      <!-- Page Header Card -->
+      <div class="card border-0 bg-dark-gradient shadow-lg text-white mb-4 p-4 rounded-4 position-relative overflow-hidden">
+        <div class="position-absolute top-0 end-0 p-3 opacity-25">
+          <i class="bi bi-bell-fill display-2 text-primary-custom"></i>
+        </div>
+        <div class="d-flex justify-content-between align-items-center position-relative">
+          <div>
+            <h1 class="fw-bold mb-1">Notification Center</h1>
+            <p class="mb-0 text-white-50">View, manage, and track all your platform updates</p>
+          </div>
+          <button *ngIf="unreadCount > 0" (click)="markAllAsRead()" class="btn btn-outline-light rounded-pill px-4 fw-bold">
+            <i class="bi bi-check-all me-2"></i>Mark All Read
+          </button>
+        </div>
+      </div>
+
+      <!-- Main Content / Loading state -->
+      <div *ngIf="loading" class="text-center py-5">
+        <div class="spinner-border text-primary-custom" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+        <p class="text-white-50 mt-3">Fetching your notifications...</p>
+      </div>
+
+      <div *ngIf="!loading">
+        <!-- Empty State -->
+        <div *ngIf="!hasNotifications" class="text-center py-5 bg-dark-gradient rounded-4 shadow-lg text-white mb-4">
+          <i class="bi bi-bell-slash display-3 text-white-50 mb-3"></i>
+          <h3>No Notifications Yet</h3>
+          <p class="text-white-50">You're all caught up! Updates about your orders will appear here.</p>
+        </div>
+
+        <!-- Grouped Notifications List -->
+        <div *ngIf="hasNotifications">
+          <!-- Today -->
+          <div *ngIf="groupedNotifications.today.length > 0" class="mb-4">
+            <h5 class="text-white fw-bold mb-3 d-flex align-items-center">
+              <span class="badge bg-primary-custom me-2" style="width: 10px; height: 10px; border-radius: 50%;"></span>
+              Today
+            </h5>
+            <div class="card border-0 bg-dark-gradient shadow-lg text-white rounded-3 p-1 mb-2">
+              <div *ngFor="let n of groupedNotifications.today" 
+                   [class.bg-white]="!n.isRead" [class.bg-opacity-10]="!n.isRead"
+                   class="d-flex justify-content-between align-items-center p-3 border-bottom border-secondary border-opacity-25 rounded-3 mb-1 notification-item cursor-pointer">
+                <div class="d-flex gap-3 align-items-start" (click)="onNotificationClick(n)">
+                  <div class="rounded-circle bg-primary bg-opacity-25 p-2 text-primary-custom flex-shrink-0 d-flex align-items-center justify-content-center" style="width: 42px; height: 42px;">
+                    <i class="bi bi-bell fs-5"></i>
+                  </div>
+                  <div>
+                    <h6 class="mb-1 fw-bold text-white">{{ n.title }}</h6>
+                    <p class="mb-1 text-white-50 small">{{ n.message }}</p>
+                    <span class="text-white-50 opacity-75" style="font-size: 11px;">{{ n.sentAt | date:'shortTime' }}</span>
+                  </div>
+                </div>
+                <button *ngIf="!n.isRead" (click)="markAsRead(n); $event.stopPropagation()" class="btn btn-sm btn-outline-light rounded-pill px-3 opacity-75 hover-opacity-100">
+                  <i class="bi bi-check me-1"></i>Read
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Yesterday -->
+          <div *ngIf="groupedNotifications.yesterday.length > 0" class="mb-4">
+            <h5 class="text-white fw-bold mb-3">Yesterday</h5>
+            <div class="card border-0 bg-dark-gradient shadow-lg text-white rounded-3 p-1 mb-2">
+              <div *ngFor="let n of groupedNotifications.yesterday" 
+                   [class.bg-white]="!n.isRead" [class.bg-opacity-10]="!n.isRead"
+                   class="d-flex justify-content-between align-items-center p-3 border-bottom border-secondary border-opacity-25 rounded-3 mb-1 notification-item cursor-pointer">
+                <div class="d-flex gap-3 align-items-start" (click)="onNotificationClick(n)">
+                  <div class="rounded-circle bg-primary bg-opacity-25 p-2 text-primary-custom flex-shrink-0 d-flex align-items-center justify-content-center" style="width: 42px; height: 42px;">
+                    <i class="bi bi-bell fs-5"></i>
+                  </div>
+                  <div>
+                    <h6 class="mb-1 fw-bold text-white">{{ n.title }}</h6>
+                    <p class="mb-1 text-white-50 small">{{ n.message }}</p>
+                    <span class="text-white-50 opacity-75" style="font-size: 11px;">{{ n.sentAt | date:'short' }}</span>
+                  </div>
+                </div>
+                <button *ngIf="!n.isRead" (click)="markAsRead(n); $event.stopPropagation()" class="btn btn-sm btn-outline-light rounded-pill px-3 opacity-75 hover-opacity-100">
+                  <i class="bi bi-check me-1"></i>Read
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- This Week -->
+          <div *ngIf="groupedNotifications.thisWeek.length > 0" class="mb-4">
+            <h5 class="text-white fw-bold mb-3">Earlier This Week</h5>
+            <div class="card border-0 bg-dark-gradient shadow-lg text-white rounded-3 p-1 mb-2">
+              <div *ngFor="let n of groupedNotifications.thisWeek" 
+                   [class.bg-white]="!n.isRead" [class.bg-opacity-10]="!n.isRead"
+                   class="d-flex justify-content-between align-items-center p-3 border-bottom border-secondary border-opacity-25 rounded-3 mb-1 notification-item cursor-pointer">
+                <div class="d-flex gap-3 align-items-start" (click)="onNotificationClick(n)">
+                  <div class="rounded-circle bg-primary bg-opacity-25 p-2 text-primary-custom flex-shrink-0 d-flex align-items-center justify-content-center" style="width: 42px; height: 42px;">
+                    <i class="bi bi-bell fs-5"></i>
+                  </div>
+                  <div>
+                    <h6 class="mb-1 fw-bold text-white">{{ n.title }}</h6>
+                    <p class="mb-1 text-white-50 small">{{ n.message }}</p>
+                    <span class="text-white-50 opacity-75" style="font-size: 11px;">{{ n.sentAt | date:'mediumDate' }}</span>
+                  </div>
+                </div>
+                <button *ngIf="!n.isRead" (click)="markAsRead(n); $event.stopPropagation()" class="btn btn-sm btn-outline-light rounded-pill px-3 opacity-75 hover-opacity-100">
+                  <i class="bi bi-check me-1"></i>Read
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Older -->
+          <div *ngIf="groupedNotifications.older.length > 0" class="mb-4">
+            <h5 class="text-white fw-bold mb-3">Older</h5>
+            <div class="card border-0 bg-dark-gradient shadow-lg text-white rounded-3 p-1 mb-2">
+              <div *ngFor="let n of groupedNotifications.older" 
+                   [class.bg-white]="!n.isRead" [class.bg-opacity-10]="!n.isRead"
+                   class="d-flex justify-content-between align-items-center p-3 border-bottom border-secondary border-opacity-25 rounded-3 mb-1 notification-item cursor-pointer">
+                <div class="d-flex gap-3 align-items-start" (click)="onNotificationClick(n)">
+                  <div class="rounded-circle bg-primary bg-opacity-25 p-2 text-primary-custom flex-shrink-0 d-flex align-items-center justify-content-center" style="width: 42px; height: 42px;">
+                    <i class="bi bi-bell fs-5"></i>
+                  </div>
+                  <div>
+                    <h6 class="mb-1 fw-bold text-white">{{ n.title }}</h6>
+                    <p class="mb-1 text-white-50 small">{{ n.message }}</p>
+                    <span class="text-white-50 opacity-75" style="font-size: 11px;">{{ n.sentAt | date:'mediumDate' }}</span>
+                  </div>
+                </div>
+                <button *ngIf="!n.isRead" (click)="markAsRead(n); $event.stopPropagation()" class="btn btn-sm btn-outline-light rounded-pill px-3 opacity-75 hover-opacity-100">
+                  <i class="bi bi-check me-1"></i>Read
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pagination -->
+          <nav *ngIf="totalPages > 1" class="d-flex justify-content-center mt-5">
+            <ul class="pagination pagination-lg">
+              <li class="page-item" [class.disabled]="currentPage === 1">
+                <button class="page-link border-0 bg-dark-gradient text-white fw-bold me-1" (click)="changePage(currentPage - 1)">
+                  <i class="bi bi-chevron-left"></i>
+                </button>
+              </li>
+              <li *ngFor="let page of [].constructor(totalPages); let index = index" 
+                  class="page-item" [class.active]="currentPage === index + 1">
+                <button class="page-link border-0 bg-dark-gradient text-white fw-bold me-1 rounded-circle ms-2"
+                        [class.bg-primary-custom]="currentPage === index + 1"
+                        style="width: 45px; height: 45px;"
+                        (click)="changePage(index + 1)">
+                  {{ index + 1 }}
+                </button>
+              </li>
+              <li class="page-item" [class.disabled]="currentPage === totalPages">
+                <button class="page-link border-0 bg-dark-gradient text-white fw-bold" (click)="changePage(currentPage + 1)">
+                  <i class="bi bi-chevron-right"></i>
+                </button>
+              </li>
+            </ul>
+          </nav>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

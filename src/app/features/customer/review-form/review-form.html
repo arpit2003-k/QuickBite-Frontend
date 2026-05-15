@@ -1,0 +1,68 @@
+<div class="container my-5 fade-in">
+  <div class="row justify-content-center">
+    <div class="col-lg-6">
+      
+      <div class="text-center mb-5">
+        <h2 class="display-5 fw-bold mb-0">Rate Your Experience</h2>
+        <p class="text-muted mt-2 fs-5">We'd love to hear your feedback on order #{{ order?.orderNumber || orderId }}</p>
+      </div>
+
+      <div *ngIf="loadingOrder" class="text-center py-5">
+        <div class="spinner-border text-danger" role="status"></div>
+      </div>
+
+      <div class="card border-0 shadow-lg rounded-5 overflow-hidden" *ngIf="!loadingOrder && order">
+        <div class="card-body p-4 p-md-5">
+          
+          <form (ngSubmit)="submitReview()">
+            
+            <!-- Food Rating -->
+            <div class="mb-5 text-center">
+              <h5 class="fw-bold mb-3">How was the food?</h5>
+              <div class="star-rating d-flex justify-content-center gap-2">
+                <i *ngFor="let star of [1,2,3,4,5]" 
+                   class="bi fs-1 cursor-pointer" 
+                   [class.bi-star-fill]="foodRating >= star" 
+                   [class.bi-star]="foodRating < star"
+                   [class.text-warning]="foodRating >= star"
+                   (click)="setFoodRating(star)"></i>
+              </div>
+              <p class="text-muted mt-2 small fw-medium">{{ foodRating }}/5 Stars</p>
+            </div>
+
+            <!-- Delivery Rating -->
+            <div class="mb-5 text-center">
+              <h5 class="fw-bold mb-3">How was the delivery?</h5>
+              <div class="star-rating d-flex justify-content-center gap-2">
+                <i *ngFor="let star of [1,2,3,4,5]" 
+                   class="bi fs-1 cursor-pointer" 
+                   [class.bi-star-fill]="deliveryRating >= star" 
+                   [class.bi-star]="deliveryRating < star"
+                   [class.text-primary]="deliveryRating >= star"
+                   (click)="setDeliveryRating(star)"></i>
+              </div>
+              <p class="text-muted mt-2 small fw-medium">{{ deliveryRating }}/5 Stars</p>
+            </div>
+
+            <!-- Comment -->
+            <div class="mb-5">
+              <label class="form-label fw-bold small text-uppercase letter-spacing-1 text-muted">Any additional comments?</label>
+              <textarea class="form-control border-0 bg-light rounded-4 p-4 shadow-sm" rows="4" [(ngModel)]="comment" name="comment" placeholder="Tell us more about the taste, packaging, or speed..."></textarea>
+            </div>
+
+            <div class="d-grid pt-2">
+              <button type="submit" class="btn btn-danger btn-lg rounded-pill py-3 fw-bold shadow-sm d-flex align-items-center justify-content-center" [disabled]="submitting">
+                <span *ngIf="submitting" class="spinner-border spinner-border-sm me-2"></span>
+                {{ submitting ? 'Submitting Feedback...' : 'Post Review' }}
+              </button>
+              <a routerLink="/customer/orders" class="btn btn-link text-muted mt-3">Cancel</a>
+            </div>
+
+          </form>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

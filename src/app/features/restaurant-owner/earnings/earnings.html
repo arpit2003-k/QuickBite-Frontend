@@ -1,0 +1,92 @@
+<div class="container my-5 fade-in">
+  <div class="mb-5">
+    <h2 class="display-5 fw-bold mb-0">Financial Insights</h2>
+    <p class="text-muted fs-5">Revenue tracking and sales performance</p>
+  </div>
+
+  <div *ngIf="loading" class="text-center py-5">
+    <div class="spinner-border text-danger" role="status"></div>
+  </div>
+
+  <div *ngIf="!loading && restaurant" class="fade-in">
+    
+    <!-- Big Revenue Card -->
+    <div class="card border-0 shadow-lg rounded-5 overflow-hidden mb-5 bg-gradient-earnings text-white">
+      <div class="card-body p-5">
+        <div class="row align-items-center">
+          <div class="col-md-6 mb-4 mb-md-0">
+            <p class="text-uppercase small fw-bold opacity-75 letter-spacing-1 mb-2">Total Life-time Revenue</p>
+            <h1 class="display-1 fw-bold mb-0">₹{{ stats.total | number }}</h1>
+          </div>
+          <div class="col-md-6">
+            <div class="h-100 bg-white bg-opacity-10 rounded-4 p-4">
+              <div class="d-flex justify-content-between mb-3 border-bottom border-white border-opacity-25 pb-2">
+                <span class="fw-medium">Last 24 Hours</span>
+                <span class="fw-bold fs-5">₹{{ stats.daily }}</span>
+              </div>
+              <div class="d-flex justify-content-between mb-3 border-bottom border-white border-opacity-25 pb-2">
+                <span class="fw-medium">Last 7 Days</span>
+                <span class="fw-bold fs-5">₹{{ stats.weekly }}</span>
+              </div>
+              <div class="d-flex justify-content-between">
+                <span class="fw-medium">Last 30 Days</span>
+                <span class="fw-bold fs-5">₹{{ stats.monthly }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-lg-8">
+        <div class="card border-0 shadow-sm rounded-4 h-100">
+          <div class="card-header bg-white border-0 p-4">
+            <h4 class="fw-bold mb-0">Top-Selling Delicacies</h4>
+          </div>
+          <div class="card-body p-0">
+            <div class="table-responsive">
+              <table class="table table-hover align-middle mb-0">
+                <thead class="bg-light shadow-sm">
+                  <tr class="text-muted small text-uppercase fw-bold letter-spacing-1">
+                    <th class="ps-4">Item Name</th>
+                    <th>Qty Sold</th>
+                    <th class="text-end pe-4">Revenue Generated</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of topItems; let i = index">
+                    <td class="ps-4">
+                      <div class="d-flex align-items-center">
+                        <span class="badge bg-danger rounded-circle me-3 d-flex align-items-center justify-content-center" style="width: 30px; height: 30px;">{{ i+1 }}</span>
+                        <span class="fw-bold fs-5">{{ item.name }}</span>
+                      </div>
+                    </td>
+                    <td><span class="badge bg-light text-dark rounded-pill px-3 py-2 fw-bold">{{ item.quantity }}</span></td>
+                    <td class="text-end pe-4 fw-bold fs-5 text-success">₹{{ item.revenue }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-lg-4">
+         <div class="card border-0 shadow-sm rounded-4 bg-dark text-white p-4 h-100">
+            <h4 class="fw-bold mb-4">Payout Summary</h4>
+            <div class="text-center py-4">
+               <i class="bi bi-bank display-1 text-danger opacity-75 mb-4 d-block"></i>
+               <p class="fs-5 opacity-75 mb-4">Your next payout is scheduled for Friday.</p>
+               <div class="bg-white bg-opacity-10 rounded-4 p-4 border border-white border-opacity-10 text-start">
+                  <p class="text-uppercase small fw-bold opacity-50 mb-1">Expected Payout</p>
+                  <h3 class="fw-bold text-danger mb-0">₹{{ stats.monthly * 0.95 | number:'1.0-0' }}</h3>
+                  <p class="small opacity-50 mt-1 mb-0">Total after 5% platform fee</p>
+               </div>
+            </div>
+         </div>
+      </div>
+    </div>
+
+  </div>
+</div>

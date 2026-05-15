@@ -1,0 +1,115 @@
+<div class="container my-5 fade-in">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="text-center mb-5">
+         <div class="bg-danger bg-opacity-10 text-danger rounded-circle d-inline-flex align-items-center justify-content-center mb-4" style="width: 100px; height: 100px;">
+           <i class="bi bi-shop display-4"></i>
+         </div>
+         <h2 class="display-5 fw-bold">Register Your Restaurant</h2>
+         <p class="text-muted">Fill in the details to start your journey with QuickBite</p>
+      </div>
+
+      <div class="card border-0 shadow-lg rounded-5 overflow-hidden">
+        <div class="card-body p-4 p-md-5">
+          <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()">
+            <div *ngIf="errorMessage" class="alert alert-danger rounded-4 mb-4">
+              {{ errorMessage }}
+            </div>
+
+            <div class="row g-4">
+              <div class="col-md-6">
+                 <label class="form-label fw-bold small text-uppercase text-muted">Restaurant Name</label>
+                 <input type="text" formControlName="name" class="form-control rounded-4 p-3 border-light bg-light" placeholder="e.g. Pizza Palace">
+              </div>
+              <div class="col-md-6">
+                 <label class="form-label fw-bold small text-uppercase text-muted">Cuisine Type</label>
+                 <input type="text" formControlName="cuisine" class="form-control rounded-4 p-3 border-light bg-light" placeholder="e.g. Italian, Chinese">
+              </div>
+
+              <div class="col-12">
+                 <label class="form-label fw-bold small text-uppercase text-muted">Description</label>
+                 <textarea formControlName="description" class="form-control rounded-4 p-3 border-light bg-light" rows="3" placeholder="Tell us about your restaurant..."></textarea>
+              </div>
+
+              <div class="col-md-6">
+                 <label class="form-label fw-bold small text-uppercase text-muted">City</label>
+                 <input type="text" formControlName="city" class="form-control rounded-4 p-3 border-light bg-light" placeholder="e.g. Bhopal">
+              </div>
+              <div class="col-md-6">
+                 <label class="form-label fw-bold small text-uppercase text-muted">Contact Phone</label>
+                 <input type="text" formControlName="phone" class="form-control rounded-4 p-3 border-light bg-light" placeholder="10-digit mobile number">
+              </div>
+
+              <div class="col-12">
+                 <label class="form-label fw-bold small text-uppercase text-muted">Store Address</label>
+                 <input type="text" formControlName="address" class="form-control rounded-4 p-3 border-light bg-light" placeholder="Full street address">
+              </div>
+
+              <div class="col-12">
+                 <div class="location-card">
+                    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-3">
+                      <div>
+                        <label class="form-label fw-bold small text-uppercase text-muted mb-1">Live Restaurant Location</label>
+                        <p class="mb-0 text-secondary">{{ locationStatus }}</p>
+                      </div>
+                      <button type="button" class="btn btn-outline-success location-action-btn" (click)="useCurrentLocation()" [disabled]="locating">
+                        <span *ngIf="locating" class="spinner-border spinner-border-sm me-2"></span>
+                        <i *ngIf="!locating" class="bi bi-crosshair me-2"></i>
+                        {{ locating ? 'Detecting...' : 'Use My Location' }}
+                      </button>
+                    </div>
+
+                    <div class="location-map-shell mb-3">
+                      <div id="restaurant-location-map" class="location-map"></div>
+                      <div class="map-hint">
+                        <i class="bi bi-cursor-fill me-2"></i>Tap on the map to place the restaurant exactly where pickups should happen.
+                      </div>
+                    </div>
+                 </div>
+              </div>
+
+              <div class="col-12">
+                 <label class="form-label fw-bold small text-uppercase text-muted">Restaurant Image URL</label>
+                 <input type="text" formControlName="imageUrl" class="form-control rounded-4 p-3 border-light bg-light" placeholder="Link to a high-quality photo">
+                 <div class="mt-2 text-center" *ngIf="registrationForm.get('imageUrl')?.value">
+                    <img [src]="registrationForm.get('imageUrl')?.value" class="rounded-4 shadow-sm" style="max-height: 150px; object-fit: cover; width: 100%;">
+                 </div>
+              </div>
+
+              <div class="col-md-4">
+                 <label class="form-label fw-bold small text-uppercase text-muted">Latitude</label>
+                 <input type="number" step="0.000001" formControlName="latitude" class="form-control rounded-4 p-3 border-light bg-light">
+              </div>
+              <div class="col-md-4">
+                 <label class="form-label fw-bold small text-uppercase text-muted">Longitude</label>
+                 <input type="number" step="0.000001" formControlName="longitude" class="form-control rounded-4 p-3 border-light bg-light">
+              </div>
+              <div class="col-md-4">
+                 <label class="form-label fw-bold small text-uppercase text-muted">Delivery Radius (km)</label>
+                 <input type="number" formControlName="deliveryRadius" class="form-control rounded-4 p-3 border-light bg-light">
+              </div>
+
+              <div class="col-md-6">
+                 <label class="form-label fw-bold small text-uppercase text-muted">Min Order Amount (₹)</label>
+                 <input type="number" formControlName="minOrderAmount" class="form-control rounded-4 p-3 border-light bg-light">
+              </div>
+              <div class="col-md-6">
+                 <label class="form-label fw-bold small text-uppercase text-muted">Est. Delivery Time (Mins)</label>
+                 <input type="number" formControlName="estimatedDeliveryMin" class="form-control rounded-4 p-3 border-light bg-light">
+              </div>
+            </div>
+
+            <button type="submit" [disabled]="registrationForm.invalid || loading" class="btn btn-danger w-100 rounded-pill py-3 fw-bold shadow-lg mt-5">
+              <span *ngIf="loading" class="spinner-border spinner-border-sm me-2"></span>
+              {{ loading ? 'Registering Store...' : 'Register Restaurant' }}
+            </button>
+
+            <div class="text-center mt-4">
+               <a routerLink="/profile" class="text-muted text-decoration-none small">Cancel and go back</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

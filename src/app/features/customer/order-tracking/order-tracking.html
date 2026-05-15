@@ -1,0 +1,116 @@
+<div class="container my-5 fade-in">
+  <div class="d-flex align-items-center mb-5">
+    <a routerLink="/customer/orders" class="btn btn-light rounded-circle shadow-sm me-4 px-3 py-2">
+      <i class="bi bi-arrow-left fs-4"></i>
+    </a>
+    <h2 class="display-5 fw-bold mb-0">Track Order</h2>
+  </div>
+
+  <div *ngIf="loading" class="text-center py-5">
+    <div class="spinner-border text-danger" style="width: 3.5rem; height: 3.5rem;" role="status"></div>
+    <h4 class="mt-4 text-muted">Connecting to GPS tracking...</h4>
+  </div>
+
+  <div class="row justify-content-center" *ngIf="!loading && order">
+    <div class="col-lg-9">
+      
+      <!-- Summary Card -->
+      <div class="card border-0 shadow-lg rounded-5 overflow-hidden mb-5">
+        <div class="bg-dark text-white p-4 p-md-5 d-flex flex-wrap justify-content-between align-items-center">
+          <div>
+            <p class="text-uppercase small fw-bold opacity-50 letter-spacing-1 mb-2">Order Tracking ID</p>
+            <h3 class="fw-bold mb-0">#{{ order.orderNumber || order.orderId }}</h3>
+          </div>
+          <div class="text-md-end mt-3 mt-md-0 d-flex align-items-center gap-3">
+             <button *ngIf="order.orderStatus === 'PLACED'" class="btn btn-outline-light rounded-pill px-4 py-2 fw-bold d-flex align-items-center" (click)="cancelOrder()" [disabled]="cancelling">
+               <span *ngIf="cancelling" class="spinner-border spinner-border-sm me-2"></span>
+               <i class="bi bi-x-circle me-2" *ngIf="!cancelling"></i>Cancel Order
+             </button>
+             <span class="badge bg-danger rounded-pill px-4 py-2 fs-5 shadow-lg">
+                {{ order.orderStatus | titlecase }}
+             </span>
+          </div>
+        </div>
+
+        <div class="card-body p-4 p-md-5 bg-white">
+          <div class="tracking-map-shell mb-5">
+            <div class="tracking-map-header">
+              <div>
+                <p class="tracking-kicker mb-1">Live Tracking</p>
+                <h4 class="fw-bold mb-1">Route, rider, and delivery distance</h4>
+                <p class="text-muted mb-0">{{ trackingMessage }}</p>
+              </div>
+              <div class="distance-pill" *ngIf="visibleRouteDistance">
+                <span class="distance-number">{{ visibleRouteDistance.distanceKm }}</span>
+                <span class="distance-unit">km</span>
+                <span class="distance-meta">ETA {{ visibleRouteDistance.estimatedMinutes }} min</span>
+              </div>
+            </div>
+
+            <div id="customer-tracking-map" class="tracking-map-canvas"></div>
+
+            <div class="route-insights" *ngIf="tracking">
+              <div class="insight-card" *ngIf="tracking.restaurantToCustomer">
+                <span class="insight-label">Restaurant to Customer</span>
+                <strong>{{ tracking.restaurantToCustomer.distanceKm }} km</strong>
+                <small>{{ tracking.restaurantToCustomer.estimatedMinutes }} min</small>
+              </div>
+              <div class="insight-card" *ngIf="tracking.agentToRestaurant && order.orderStatus !== 'PICKED_UP'">
+                <span class="insight-label">Rider to Restaurant</span>
+                <strong>{{ tracking.agentToRestaurant.distanceKm }} km</strong>
+                <small>{{ tracking.agentToRestaurant.estimatedMinutes }} min</small>
+              </div>
+              <div class="insight-card" *ngIf="tracking.agentToCustomer && order.orderStatus === 'PICKED_UP'">
+                <span class="insight-label">Rider to Customer</span>
+                <strong>{{ tracking.agentToCustomer.distanceKm }} km</strong>
+                <small>{{ tracking.agentToCustomer.estimatedMinutes }} min</small>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Timeline -->
+          <div *ngIf="order.orderStatus !== 'CANCELLED'" class="order-timeline mb-5 mt-4">
+            <div *ngFor="let step of statusSteps; let i = index" class="timeline-step" [class]="getStatusStepClass(i)">
+              <div class="step-icon-container">
+                <div class="step-line" *ngIf="i !== 0"></div>
+                <div class="step-icon shadow-sm">
+                  <i class="bi" [class]="step.icon"></i>
+                </div>
+              </div>
+              <div class="step-content">
+                <p class="step-label fw-bold mb-1">{{ step.label }}</p>
+                <p class="step-desc text-muted small" *ngIf="getStatusStepClass(i) === 'active'">Current status</p>
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="order.orderStatus === 'CANCELLED'" class="alert alert-danger rounded-4 p-5 text-center shadow-sm border-0 mb-5">
+            <i class="bi bi-x-circle-fill display-3 mb-3 d-block"></i>
+            <h3 class="fw-bold">Your order was cancelled</h3>
+            <p class="mb-0 fs-5 mt-2">If you have any questions, please contact support or your restaurant.</p>
+          </div>
+
+          <div class="row g-4 pt-4 border-top border-light">
+             <div class="col-md-6">
+                <h5 class="fw-bold mb-3"><i class="bi bi-shop me-2 text-primary"></i>Restaurant Details</h5>
+                <p class="mb-1 text-muted small px-4 border-start border-3 border-danger ms-2 fw-medium">Readying your meal with love</p>
+                <!-- In a real app we'd fetch restaurant name here -->
+             </div>
+             <div class="col-md-6">
+                <h5 class="fw-bold mb-3"><i class="bi bi-geo-alt-fill me-2 text-danger"></i>Delivery Address</h5>
+                <p class="text-secondary small px-4 border-start border-3 border-danger ms-2 fw-medium">{{ order.deliveryAddress }}</p>
+             </div>
+          </div>
+
+          <div *ngIf="order.orderStatus === 'DELIVERED'" class="mt-5 text-center border-top pt-5">
+            <h4 class="fw-bold mb-3">Happy with your food?</h4>
+            <a [routerLink]="['/customer/review', order.orderId]" class="btn btn-warning btn-lg rounded-pill px-5 py-3 fw-bold shadow-sm">
+              <i class="bi bi-star-fill me-2"></i>Write a Review
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

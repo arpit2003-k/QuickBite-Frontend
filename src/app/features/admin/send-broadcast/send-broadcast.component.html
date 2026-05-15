@@ -1,0 +1,49 @@
+<div class="container my-5">
+  <div class="row">
+    <div class="col-md-8 mx-auto">
+      <div class="card border-0 bg-dark-gradient shadow-lg text-white p-4 p-md-5 rounded-4 position-relative overflow-hidden">
+        
+        <!-- Header -->
+        <div class="mb-4">
+          <h2 class="fw-bold d-flex align-items-center">
+            <i class="bi bi-megaphone me-3 text-primary-custom"></i> Admin Broadcast Panel
+          </h2>
+          <p class="text-white-50">Create a promotional or system update message to broadcast to all platform users instantly.</p>
+        </div>
+
+        <!-- Feedback Alert Messages -->
+        <div *ngIf="successMsg" class="alert alert-success bg-success bg-opacity-25 border-0 text-white p-3 rounded-3 mb-4 d-flex align-items-center shadow-sm">
+          <i class="bi bi-check-circle-fill me-2 fs-5"></i> {{ successMsg }}
+        </div>
+        <div *ngIf="errorMsg" class="alert alert-danger bg-danger bg-opacity-25 border-0 text-white p-3 rounded-3 mb-4 d-flex align-items-center shadow-sm">
+          <i class="bi bi-exclamation-triangle-fill me-2 fs-5"></i> {{ errorMsg }}
+        </div>
+
+        <!-- Form -->
+        <form (ngSubmit)="sendBroadcast()" #broadcastForm="ngForm" novalidate>
+          <div class="mb-4">
+            <label for="title" class="form-label text-white-50 fw-semibold">Broadcast Title</label>
+            <input type="text" id="title" name="title" [(ngModel)]="title" required 
+                   class="form-control bg-dark bg-opacity-50 border-secondary text-white p-3 rounded-3 shadow-none custom-input" 
+                   placeholder="e.g. 50% Off Weekend Special! 🍕" autocomplete="off">
+          </div>
+
+          <div class="mb-4">
+            <label for="message" class="form-label text-white-50 fw-semibold">Broadcast Message</label>
+            <textarea id="message" name="message" [(ngModel)]="message" required 
+                      class="form-control bg-dark bg-opacity-50 border-secondary text-white p-3 rounded-3 shadow-none custom-input" 
+                      rows="4" placeholder="e.g. Treat yourself to a tasty feast this weekend. Use code WEEKEND50 at checkout. Offer valid till Sunday."></textarea>
+          </div>
+
+          <button type="submit" [disabled]="sending || !title.trim() || !message.trim()" 
+                  class="btn btn-primary-custom w-100 py-3 rounded-pill fw-bold text-dark fs-5 mt-2 transition-all shadow d-flex align-items-center justify-content-center">
+            <span *ngIf="sending" class="spinner-border spinner-border-sm me-2" role="status"></span>
+            <i *ngIf="!sending" class="bi bi-send-fill me-2"></i>
+            {{ sending ? 'Broadcasting Notification...' : 'Send Broadcast to Everyone' }}
+          </button>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,85 @@
+<div class="container my-5 fade-in">
+  <div class="d-flex justify-content-between align-items-center mb-5">
+    <div>
+      <h2 class="display-5 fw-bold mb-0">Order History</h2>
+      <p class="text-muted fs-5">Treat yourself again to your favorites</p>
+    </div>
+    <a routerLink="/restaurants" class="btn btn-outline-danger rounded-pill px-4 fw-bold shadow-sm">
+      <i class="bi bi-plus-lg me-2"></i>New Order
+    </a>
+  </div>
+
+  <div *ngIf="loading" class="text-center py-5 mt-5">
+    <div class="spinner-border text-danger" style="width: 3.5rem; height: 3.5rem;" role="status"></div>
+    <h4 class="mt-3 text-muted fw-medium">Loading your orders...</h4>
+  </div>
+
+  <div *ngIf="!loading && orders.length === 0" class="text-center py-5 bg-white rounded-5 shadow-sm">
+    <i class="bi bi-bag-x display-1 text-muted mb-4 d-block"></i>
+    <h3 class="fw-bold">No orders yet</h3>
+    <p class="text-secondary mb-4">Hungry? Order some delicious food now!</p>
+    <a routerLink="/restaurants" class="btn btn-danger btn-lg rounded-pill px-5 py-3 fw-bold shadow-sm">Browse Restaurants</a>
+  </div>
+
+  <div class="row g-4 animate-fade-in" *ngIf="!loading && orders.length > 0">
+    <div class="col-12" *ngFor="let order of orders; let i = index" [style.animation-delay]="(i * 0.1) + 's'">
+      <div class="card interactive-card border-0 shadow-sm rounded-4 order-card overflow-hidden transition-all">
+        <div class="card-body p-0">
+          <div class="row g-0">
+            <!-- Order Header Color Strip -->
+            <div class="col-md-1" [class]="getStatusBadgeClass(order.orderStatus)" style="min-height: 10px;"></div>
+            
+            <div class="col-md-11 p-4 p-md-5">
+              <div class="d-flex flex-wrap justify-content-between align-items-start mb-4">
+                <div>
+                  <div class="d-flex align-items-center mb-2">
+                    <h4 class="fw-bold mb-0 me-3">Order #{{ order.orderNumber || order.orderId }}</h4>
+                    <span class="badge rounded-pill px-3 py-2 fs-6 shadow-sm" [class]="getStatusBadgeClass(order.orderStatus)">
+                      {{ order.orderStatus | titlecase }}
+                    </span>
+                  </div>
+                  <p class="text-muted mb-0 fw-medium">
+                    <i class="bi bi-calendar3 me-2"></i>{{ order.orderDate | date:'medium' }}
+                  </p>
+                </div>
+                <div class="text-md-end mt-3 mt-md-0">
+                  <h3 class="fw-bold text-danger mb-0">₹{{ order.finalAmount || order.totalAmount }}</h3>
+                  <p class="text-muted small mb-0">{{ order.items?.length }} Items • {{ order.modeOfPayment }}</p>
+                </div>
+              </div>
+
+              <div class="bg-light rounded-4 p-4 mb-4 border border-light-subtle">
+                <div class="row">
+                  <div class="col-md-8">
+                    <p class="fw-bold text-secondary text-uppercase small letter-spacing-1 mb-3">Items Ordered</p>
+                    <div class="d-flex flex-wrap gap-2">
+                      <span *ngFor="let item of order.items" class="badge bg-white text-dark border p-2 px-3 rounded-pill fw-medium shadow-sm">
+                        {{ item.quantity }}x {{ item.name }}
+                      </span>
+                    </div>
+                  </div>
+                  <div class="col-md-4 mt-4 mt-md-0">
+                    <p class="fw-bold text-secondary text-uppercase small letter-spacing-1 mb-3">Delivery To</p>
+                    <p class="text-truncate-2 small text-muted mb-0" [title]="order.deliveryAddress">
+                      {{ order.deliveryAddress }}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="d-flex flex-wrap gap-3">
+                <button class="btn btn-danger rounded-pill px-4 py-2 fw-bold shadow-sm d-flex align-items-center" (click)="trackOrder(order.orderId)">
+                  <i class="bi bi-geo-fill me-2"></i>Track Order
+                </button>
+                <button class="btn btn-outline-dark rounded-pill px-4 py-2 fw-bold d-flex align-items-center" (click)="reorder(order)" [disabled]="reordering">
+                   <span *ngIf="reordering" class="spinner-border spinner-border-sm me-2"></span>
+                   <i class="bi bi-arrow-repeat me-2" *ngIf="!reordering"></i>Reorder
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,171 @@
+<div class="container my-5 fade-in">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      
+      <div class="text-center mb-5">
+        <div class="position-relative d-inline-block mb-4">
+          <div class="bg-danger rounded-circle shadow-lg d-flex align-items-center justify-content-center text-white" style="width: 120px; height: 120px;">
+            <span class="display-3 fw-bold">{{ user?.fullName?.[0] || user?.email?.[0] || 'U' }}</span>
+          </div>
+          <span class="position-absolute bottom-0 end-0 badge rounded-pill bg-dark border border-white border-3 px-3 py-2">
+            {{ user?.role | titlecase }}
+          </span>
+        </div>
+        <h2 class="display-5 fw-bold mb-1">{{ user?.fullName || 'QuickBite User' }}</h2>
+        <p class="text-muted fs-5">{{ user?.email }}</p>
+      </div>
+
+      <div class="card border-0 shadow-lg rounded-5 overflow-hidden mb-5">
+        <div class="card-header bg-white border-0 p-4 pb-0">
+          <h4 class="fw-bold mb-0">Personal Profile</h4>
+        </div>
+        <div class="card-body p-4 p-md-5">
+          <div *ngIf="profileMessage" class="alert alert-success rounded-4 border-0 mb-4">{{ profileMessage }}</div>
+          <div *ngIf="profileError" class="alert alert-danger rounded-4 border-0 mb-4">{{ profileError }}</div>
+          <div class="row g-4">
+            <div class="col-md-6">
+              <label class="form-label fw-bold text-muted small text-uppercase">Full Name</label>
+              <input type="text" class="form-control rounded-4 p-3 shadow-sm" [(ngModel)]="profileForm.fullName" name="fullName">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-bold text-muted small text-uppercase">Email Address</label>
+              <div class="bg-light p-3 rounded-4 fw-bold fs-5 shadow-sm">{{ user?.email }}</div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-bold text-muted small text-uppercase">Phone</label>
+              <input type="text" class="form-control rounded-4 p-3 shadow-sm" [(ngModel)]="profileForm.phone" name="phone">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-bold text-muted small text-uppercase">User Role</label>
+              <div class="bg-light p-3 rounded-4 fw-bold fs-5 shadow-sm text-danger">{{ user?.role }}</div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-bold text-muted small text-uppercase">Member Since</label>
+              <div class="bg-light p-3 rounded-4 fw-bold fs-5 shadow-sm">{{ user?.createdAt ? (user.createdAt | date:'mediumDate') : 'Not Available' }}</div>
+            </div>
+            <div class="col-12">
+              <button class="btn btn-danger rounded-pill px-5 py-3 fw-bold shadow-sm" (click)="updateProfile()" [disabled]="savingProfile">
+                <span *ngIf="savingProfile" class="spinner-border spinner-border-sm me-2"></span>
+                {{ savingProfile ? 'Saving...' : 'Save Profile Changes' }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card border-0 shadow-lg rounded-5 overflow-hidden mb-5">
+        <div class="card-header bg-white border-0 p-4 pb-0">
+          <h4 class="fw-bold mb-0">Change Password</h4>
+        </div>
+        <div class="card-body p-4 p-md-5">
+          <div *ngIf="passwordMessage" class="alert alert-success rounded-4 border-0 mb-4">{{ passwordMessage }}</div>
+          <div *ngIf="passwordError" class="alert alert-danger rounded-4 border-0 mb-4">{{ passwordError }}</div>
+          <div class="row g-4">
+            <div class="col-md-6">
+              <label class="form-label fw-bold text-muted small text-uppercase">Current Password</label>
+              <input type="password" class="form-control rounded-4 p-3 shadow-sm" [(ngModel)]="passwordForm.currentPassword" name="currentPassword" placeholder="Required for local accounts">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-bold text-muted small text-uppercase">New Password</label>
+              <input type="password" class="form-control rounded-4 p-3 shadow-sm" [(ngModel)]="passwordForm.newPassword" name="newPassword">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-bold text-muted small text-uppercase">Confirm New Password</label>
+              <input type="password" class="form-control rounded-4 p-3 shadow-sm" [(ngModel)]="passwordForm.confirmPassword" name="confirmPassword">
+            </div>
+            <div class="col-12">
+              <button class="btn btn-outline-danger rounded-pill px-5 py-3 fw-bold shadow-sm" (click)="updatePassword()" [disabled]="changingPassword">
+                <span *ngIf="changingPassword" class="spinner-border spinner-border-sm me-2"></span>
+                {{ changingPassword ? 'Updating...' : 'Update Password' }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card border-0 shadow-lg rounded-5 overflow-hidden mb-4 border-start border-5 border-danger" *ngFor="let res of restaurants">
+        <div class="card-header bg-white border-0 p-4 pb-0">
+          <h4 class="fw-bold mb-0">Registered Branch</h4>
+        </div>
+        <div class="card-body p-4 p-md-5">
+          <div class="row align-items-center">
+            <div class="col-md-8">
+               <h3 class="fw-bold mb-2">{{ res.name }}</h3>
+               <p class="text-muted mb-3"><i class="bi bi-geo-alt-fill text-danger me-2"></i>{{ res.address }}</p>
+               <div class="d-flex flex-wrap gap-2">
+                  <span class="badge bg-light text-dark border p-2 px-3 rounded-pill fw-bold">{{ res.cuisine }}</span>
+                  <span class="badge rounded-pill p-2 px-3 fw-bold" [class.bg-success]="res.isApproved" [class.bg-warning]="!res.isApproved">
+                     {{ res.isApproved ? 'Official Partner' : 'Approval Pending' }}
+                  </span>
+               </div>
+            </div>
+            <div class="col-md-4 text-md-end mt-4 mt-md-0">
+               <a [routerLink]="['/owner/dashboard']" [queryParams]="{ id: res.restaurantId }" class="btn btn-danger rounded-pill px-4 py-3 fw-bold shadow-sm w-100">
+                  Manage Store
+               </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Restaurant Owner: New Branch Button -->
+      <div *ngIf="user?.role === 'RESTAURANT_OWNER'" class="mb-5 text-center">
+         <a routerLink="/owner/register" class="btn btn-outline-danger rounded-pill px-5 py-3 fw-bold shadow-sm">
+            <i class="bi bi-plus-circle me-2"></i>Register New Branch
+         </a>
+      </div>
+
+      <!-- Delivery Agent Profile & Dashboard -->
+      <div *ngIf="user?.role === 'DELIVERY_AGENT' && agentProfile" class="card border-0 shadow-lg rounded-5 overflow-hidden mb-4 border-start border-5 border-primary">
+         <div class="card-header bg-white border-0 p-4 pb-0">
+           <h4 class="fw-bold mb-0">Delivery Partner Profile</h4>
+         </div>
+         <div class="card-body p-4 p-md-5">
+           <div class="row align-items-center">
+              <div class="col-md-8">
+                 <h3 class="fw-bold mb-2">{{ agentProfile.name || user.fullName }}</h3>
+                 <p class="text-muted mb-3"><i class="bi bi-bicycle text-primary me-2"></i>{{ agentProfile.vehicleNumber }} ({{ agentProfile.vehicleType }})</p>
+                 <div class="d-flex flex-wrap gap-2">
+                    <span class="badge bg-light text-dark border p-2 px-3 rounded-pill fw-bold">Rider ID: {{ agentProfile.agentId }}</span>
+                    <span class="badge rounded-pill p-2 px-3 fw-bold" [class.bg-success]="agentProfile.isVerified" [class.bg-warning]="!agentProfile.isVerified">
+                       {{ agentProfile.isVerified ? 'Verified Rider' : 'Verification Needed' }}
+                    </span>
+                 </div>
+              </div>
+              <div class="col-md-4 text-md-end mt-4 mt-md-0">
+                 <a routerLink="/agent/dashboard" class="btn btn-primary rounded-pill px-4 py-3 fw-bold shadow-sm w-100">
+                    Rider Dashboard
+                  </a>
+              </div>
+           </div>
+         </div>
+      </div>
+
+      <!-- Delivery Agent: Registration Button -->
+      <div *ngIf="user?.role === 'DELIVERY_AGENT' && !agentProfile && !loading" class="card border-0 shadow-lg rounded-5 overflow-hidden mb-5 bg-primary bg-opacity-10">
+         <div class="card-body p-5 text-center">
+            <i class="bi bi-bicycle display-1 text-primary mb-3 d-block"></i>
+            <h2 class="fw-bold mb-3">Become a Delivery Partner</h2>
+            <p class="text-secondary fs-5 mb-4">Start earning by delivering happiness to our customers. Quick payouts and flexible hours!</p>
+            <a routerLink="/agent/register-profile" class="btn btn-primary rounded-pill px-5 py-3 fw-bold shadow-lg">
+               Join Now & Start Earning
+            </a>
+         </div>
+      </div>
+
+      <!-- Admin Panel: Link for ADMIN users -->
+      <div *ngIf="user?.role === 'ADMIN'" class="mt-5 text-center px-4">
+        <div class="p-5 bg-dark text-white rounded-5 shadow-lg">
+          <div class="mb-4">
+            <i class="bi bi-shield-check display-1 text-danger"></i>
+          </div>
+          <h3 class="fw-bold mb-3 text-uppercase letter-spacing">Supervisor Console</h3>
+          <p class="opacity-75 mb-5 mx-auto opacity-75" style="max-width: 500px;">Access full platform analytics, moderate users, and approve business registrations.</p>
+          <a routerLink="/admin" class="btn btn-danger btn-lg rounded-pill px-5 py-3 fw-bold shadow-lg transform-hover">
+             <i class="bi bi-speedometer2 me-2"></i>Open Admin Dashboard
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,65 @@
+<div class="container my-5 fade-in">
+  <div class="mb-5">
+    <h2 class="display-5 fw-bold mb-0">Earnings Summary</h2>
+    <p class="text-muted fs-5">Track your hard work and rewards</p>
+  </div>
+
+  <div *ngIf="loading" class="text-center py-5">
+    <div class="spinner-border text-danger" role="status"></div>
+  </div>
+
+  <div *ngIf="!loading && summary">
+    <!-- Main Stats -->
+    <div class="row g-4 mb-5">
+      <div class="col-md-4">
+        <div class="card border-0 shadow-lg rounded-5 bg-success text-white p-4 h-100 p-md-5">
+           <p class="text-uppercase small fw-bold opacity-75 mb-3">Total Earnings</p>
+           <h2 class="display-3 fw-bold mb-0">₹{{ summary.totalEarnings }}</h2>
+           <p class="mb-0 mt-3 small"><i class="bi bi-graph-up-arrow me-2"></i>Includes delivery fees & tips</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card border-0 shadow-lg rounded-5 bg-dark text-white p-4 h-100 p-md-5">
+           <p class="text-uppercase small fw-bold opacity-75 mb-3">Total Deliveries</p>
+           <h2 class="display-3 fw-bold mb-0">{{ summary.totalDeliveries }}</h2>
+           <p class="mb-0 mt-3 small"><i class="bi bi-bicycle me-2"></i>Successful drops</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card border-0 shadow-lg rounded-5 bg-danger text-white p-4 h-100 p-md-5">
+           <p class="text-uppercase small fw-bold opacity-75 mb-3">Average Rating</p>
+           <h2 class="display-3 fw-bold mb-0">{{ summary.averageRating }}<span class="fs-5 opacity-75">/5</span></h2>
+           <p class="mb-0 mt-3 small"><i class="bi bi-heart-fill me-2"></i>Based on customer feedback</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Secondary Stats -->
+    <div class="row g-4 overflow-hidden">
+       <div class="col-md-6">
+          <div class="card border-0 shadow-sm rounded-4 p-4">
+             <div class="d-flex align-items-center mb-3">
+                <div class="bg-primary bg-opacity-10 text-primary p-3 rounded-3 me-3">
+                   <i class="bi bi-clock-history fs-4"></i>
+                </div>
+                <h5 class="fw-bold mb-0">Pending Payout</h5>
+             </div>
+             <h3 class="fw-bold text-primary mb-0">₹{{ summary.pendingPayout }}</h3>
+             <p class="text-muted small mt-2">Next settlement: Coming Friday</p>
+          </div>
+       </div>
+       <div class="col-md-6">
+          <div class="card border-0 shadow-sm rounded-4 p-4">
+             <div class="d-flex align-items-center mb-3">
+                <div class="bg-warning bg-opacity-10 text-warning p-3 rounded-3 me-3">
+                   <i class="bi bi-gift fs-4"></i>
+                </div>
+                <h5 class="fw-bold mb-0">Weekly Incentives</h5>
+             </div>
+             <h3 class="fw-bold text-warning mb-0">₹{{ summary.incentives }}</h3>
+             <p class="text-muted small mt-2">Earned through mission bonuses</p>
+          </div>
+       </div>
+    </div>
+  </div>
+</div>

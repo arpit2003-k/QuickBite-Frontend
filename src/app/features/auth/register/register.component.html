@@ -1,0 +1,86 @@
+<div class="container d-flex justify-content-center align-items-center mb-5 mt-5 animate-fade-in" style="min-height: 80vh;">
+  <div class="card glass-panel border-0" style="width: 32rem;">
+    <div class="card-body p-5">
+      <div class="text-center mb-4">
+        <i class="bi bi-person-plus display-4 text-primary-custom mb-3 d-inline-block"></i>
+        <h3 class="card-title fw-bold">Create an Account</h3>
+        <p class="text-muted small">Join QuickBite and start your journey!</p>
+      </div>
+      
+      <div *ngIf="errorMessage" class="alert alert-danger rounded-3 p-3 shadow-sm" role="alert">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i> {{ errorMessage }}
+      </div>
+      
+      <div *ngIf="successMessage" class="alert alert-success rounded-3 p-3 shadow-sm" role="alert">
+        <i class="bi bi-check-circle-fill me-2"></i> {{ successMessage }}
+      </div>
+
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+        <div class="mb-4">
+          <label for="fullName" class="form-label fw-bold text-muted small text-uppercase">Full Name</label>
+          <div class="input-group">
+            <span class="input-group-text bg-transparent border-end-0"><i class="bi bi-person text-muted"></i></span>
+            <input type="text" id="fullName" class="form-control border-start-0 ps-0" formControlName="fullName"
+                   [class.is-invalid]="registerForm.get('fullName')?.invalid && registerForm.get('fullName')?.touched"
+                   placeholder="John Doe">
+            <div class="invalid-feedback pt-1">Full name is required.</div>
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <label for="email" class="form-label fw-bold text-muted small text-uppercase">Email address</label>
+          <div class="input-group">
+            <span class="input-group-text bg-transparent border-end-0"><i class="bi bi-envelope text-muted"></i></span>
+            <input type="email" id="email" class="form-control border-start-0 ps-0" formControlName="email"
+                   [class.is-invalid]="registerForm.get('email')?.invalid && registerForm.get('email')?.touched"
+                   placeholder="name@example.com">
+            <div class="invalid-feedback pt-1">Please enter a valid email address.</div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6 mb-4">
+            <label for="password" class="form-label fw-bold text-muted small text-uppercase">Password</label>
+            <div class="input-group">
+               <span class="input-group-text bg-transparent border-end-0"><i class="bi bi-lock text-muted"></i></span>
+               <input type="password" id="password" class="form-control border-start-0 ps-0" formControlName="password"
+                      [class.is-invalid]="registerForm.get('password')?.invalid && registerForm.get('password')?.touched">
+               <div class="invalid-feedback pt-1">Required (min 6 chars).</div>
+            </div>
+          </div>
+
+          <div class="col-md-6 mb-4">
+            <label for="phone" class="form-label fw-bold text-muted small text-uppercase">Phone</label>
+            <div class="input-group">
+               <span class="input-group-text bg-transparent border-end-0"><i class="bi bi-telephone text-muted"></i></span>
+               <input type="text" id="phone" class="form-control border-start-0 ps-0" formControlName="phone"
+                      [class.is-invalid]="registerForm.get('phone')?.invalid && registerForm.get('phone')?.touched">
+               <div class="invalid-feedback pt-1">Phone number is required.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mb-5">
+          <label for="role" class="form-label fw-bold text-muted small text-uppercase">Register As</label>
+          <div class="input-group">
+            <span class="input-group-text bg-transparent border-end-0"><i class="bi bi-briefcase text-muted"></i></span>
+            <select id="role" class="form-select border-start-0 ps-0" formControlName="role">
+              <option value="CUSTOMER">Customer (Order Food)</option>
+              <option value="RESTAURANT_OWNER">Restaurant Owner (Sell Food)</option>
+              <option value="DELIVERY_AGENT">Delivery Agent (Deliver Food)</option>
+            </select>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100 mb-4 fw-bold rounded-pill py-3 shadow-sm" [disabled]="registerForm.invalid || isLoading">
+          <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+          Sign up
+        </button>
+      </form>
+
+      <div class="text-center text-muted">
+        <p class="mb-0 small">Already have an account? <br><a routerLink="/login" class="text-primary-custom text-decoration-none fw-bold mt-1 d-inline-block">Log in</a></p>
+      </div>
+    </div>
+  </div>
+</div>
