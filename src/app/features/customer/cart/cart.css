@@ -1,0 +1,37 @@
+.fade-in {
+  animation: fadeIn 0.4s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.qty-btn {
+  transition: all 0.2s ease;
+}
+
+.qty-btn:hover {
+  background-color: var(--bs-danger) !important;
+  color: white !important;
+  transform: scale(1.1);
+}
+
+.delete-btn {
+  transition: all 0.2s ease;
+  opacity: 0.7;
+}
+
+.delete-btn:hover {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+.proceed-btn {
+  transition: all 0.3s ease;
+}
+
+.proceed-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0.5rem 1rem rgba(220, 53, 69, 0.2) !important;
+}

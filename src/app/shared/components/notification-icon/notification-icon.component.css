@@ -1,0 +1,28 @@
+.notification-item {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.notification-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.notification-dropdown-wrapper {
+  z-index: 1051;
+}
+
+.bg-dark-gradient {
+  background: linear-gradient(135deg, #1f2937, #111827);
+}
+
+.text-primary-custom {
+  color: #ff9f43 !important;
+}
+
+.transition-all {
+  transition: all 0.2s ease;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}

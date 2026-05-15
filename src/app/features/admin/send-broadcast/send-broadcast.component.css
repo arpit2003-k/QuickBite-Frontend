@@ -1,0 +1,31 @@
+.bg-dark-gradient {
+  background: linear-gradient(135deg, #1f2937, #111827);
+}
+
+.text-primary-custom {
+  color: #ff9f43 !important;
+}
+
+.btn-primary-custom {
+  background-color: #ff9f43 !important;
+  border-color: #ff9f43 !important;
+}
+
+.btn-primary-custom:hover {
+  background-color: #e68a2e !important;
+  border-color: #e68a2e !important;
+}
+
+.custom-input {
+  transition: all 0.2s ease;
+}
+
+.custom-input:focus {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border-color: #ff9f43 !important;
+  box-shadow: 0 0 8px rgba(255, 159, 67, 0.25) !important;
+}
+
+.transition-all {
+  transition: all 0.2s ease;
+}

@@ -1,0 +1,167 @@
+<div class="bg-dark text-white py-5 mb-4 shadow">
+  <div class="container-fluid">
+    <div class="row align-items-center">
+      <div class="col-md-8">
+        <h1 class="display-5 fw-bold mb-1">Admin Control Center</h1>
+        <p class="lead opacity-75 mb-0">Platform-wide management and oversight dashboard</p>
+      </div>
+      <div class="col-md-4 text-md-end pt-3 pt-md-0">
+        <div class="badge bg-danger rounded-pill px-4 py-2 fs-6">System Administrator</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid">
+  <ul class="nav nav-pills mb-4 gap-2 bg-white p-2 rounded-pill shadow-sm d-inline-flex border">
+    <li class="nav-item">
+      <a class="nav-link rounded-pill fw-bold text-dark" routerLink="/admin/users" routerLinkActive="active"><i class="bi bi-people me-2"></i>Users</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link rounded-pill fw-bold text-dark" routerLink="/admin/restaurants" routerLinkActive="active"><i class="bi bi-shop me-2"></i>Restaurants</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link rounded-pill fw-bold text-dark" routerLink="/admin/agents" routerLinkActive="active"><i class="bi bi-bicycle me-2"></i>Agents</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link rounded-pill fw-bold text-dark" routerLink="/admin/analytics" routerLinkActive="active"><i class="bi bi-graph-up-arrow me-2"></i>Analytics</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link rounded-pill fw-bold text-dark" routerLink="/admin/reviews" routerLinkActive="active"><i class="bi bi-star me-2"></i>Reviews</a>
+    </li>
+  </ul>
+
+  <div class="mb-5">
+    <h2 class="fw-bold mb-0 text-danger">Platform Analytics</h2>
+    <p class="text-muted small">Real-time performance metrics and business growth charts</p>
+  </div>
+
+  <!-- KPI Cards -->
+  <div class="row g-4 mb-5">
+    <div class="col-md-3">
+      <div class="card border-0 shadow-sm rounded-4 p-4 text-center">
+        <div class="text-muted small text-uppercase fw-bold mb-1">Total Orders</div>
+        <div class="h3 fw-bold mb-0 text-dark">{{ stats.totalOrders | number }}</div>
+        <div class="text-success small"><i class="bi bi-arrow-up me-1"></i>12%</div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card border-0 shadow-sm rounded-4 p-4 text-center">
+        <div class="text-muted small text-uppercase fw-bold mb-1">Total Revenue</div>
+        <div class="h3 fw-bold mb-0 text-dark">₹{{ stats.totalRevenue | number }}</div>
+        <div class="text-success small"><i class="bi bi-arrow-up me-1"></i>8.5%</div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card border-0 shadow-sm rounded-4 p-4 text-center">
+        <div class="text-muted small text-uppercase fw-bold mb-1">Active Users</div>
+        <div class="h3 fw-bold mb-0 text-dark">{{ stats.activeUsers | number }}</div>
+        <div class="text-info small"><i class="bi bi-person me-1"></i>Live</div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card border-0 shadow-sm rounded-4 p-4 text-center">
+        <div class="text-muted small text-uppercase fw-bold mb-1">Platform Rating</div>
+        <div class="h3 fw-bold mb-0 text-warning">{{ stats.avgRating }} <i class="bi bi-star-fill small"></i></div>
+        <div class="text-muted small">From 2k reviews</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-3 mb-5">
+    <div class="col-md-3">
+      <div class="card border-0 bg-primary bg-gradient text-white shadow-sm rounded-4 p-3">
+        <div class="d-flex align-items-center justify-content-between">
+          <div>
+            <div class="small fw-bold opacity-75">Total Customers</div>
+            <div class="h4 fw-bold mb-0">{{ userBreakdown.customers | number }}</div>
+          </div>
+          <i class="bi bi-person-heart fs-2 opacity-50"></i>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card border-0 bg-warning bg-gradient text-dark shadow-sm rounded-4 p-3">
+        <div class="d-flex align-items-center justify-content-between">
+          <div>
+            <div class="small fw-bold opacity-75">Restaurant Owners</div>
+            <div class="h4 fw-bold mb-0">{{ userBreakdown.owners | number }}</div>
+          </div>
+          <i class="bi bi-shop-window fs-2 opacity-50"></i>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card border-0 bg-dark bg-gradient text-white shadow-sm rounded-4 p-3">
+        <div class="d-flex align-items-center justify-content-between">
+          <div>
+            <div class="small fw-bold opacity-75">Delivery Agents</div>
+            <div class="h4 fw-bold mb-0">{{ userBreakdown.agents | number }}</div>
+          </div>
+          <i class="bi bi-bicycle fs-2 opacity-50"></i>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card border-0 bg-success bg-gradient text-white shadow-sm rounded-4 p-3">
+        <div class="d-flex align-items-center justify-content-between">
+          <div>
+            <div class="small fw-bold opacity-75">Total Population</div>
+            <div class="h4 fw-bold mb-0">{{ userBreakdown.total | number }}</div>
+          </div>
+          <i class="bi bi-people-fill fs-2 opacity-50"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-4">
+    <!-- Revenue Chart -->
+    <div class="col-lg-8">
+      <div class="card border-0 shadow-sm rounded-4 p-4 h-100">
+        <h5 class="fw-bold mb-4">Revenue Trends (Weekly)</h5>
+        <div class="chart-container d-flex align-items-end justify-content-between px-3" style="height: 300px;">
+          <div *ngFor="let item of revenueData" class="text-center" style="width: 10%;">
+            <div class="bg-danger bg-gradient rounded-top-3 shadow-sm bar" [style.height]="item.height" [title]="'₹' + item.value + 'k'"></div>
+            <div class="text-muted small mt-3 fw-bold">{{ item.label }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cuisine Distribution -->
+    <div class="col-lg-4">
+      <div class="card border-0 shadow-sm rounded-4 p-4 h-100">
+        <h5 class="fw-bold mb-4">Popular Cuisines</h5>
+        <div class="mb-4" *ngFor="let cuisine of cuisineData">
+          <div class="d-flex justify-content-between mb-2">
+            <span class="small fw-bold">{{ cuisine.name }}</span>
+            <span class="small text-muted">{{ cuisine.percent }}%</span>
+          </div>
+          <div class="progress rounded-pill" style="height: 8px;">
+            <div class="progress-bar rounded-pill" role="progressbar" [style.width]="cuisine.percent + '%'" [style.backgroundColor]="cuisine.color"></div>
+          </div>
+        </div>
+        <div class="mt-4 pt-4 border-top">
+          <div class="text-center">
+             <div class="h3 fw-bold mb-0">Italian</div>
+             <div class="text-muted small">Hot Favourite This Week</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .bar {
+    width: 100%;
+    transition: height 1s ease-in-out;
+    cursor: pointer;
+    position: relative;
+  }
+  .bar:hover { opacity: 0.8; }
+  .chart-container {
+    border-bottom: 2px solid #f8f9fa;
+  }
+</style>

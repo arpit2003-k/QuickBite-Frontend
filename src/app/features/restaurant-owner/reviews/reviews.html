@@ -1,0 +1,53 @@
+<div class="container my-5 fade-in">
+  <div class="mb-5">
+    <h2 class="display-5 fw-bold mb-0">Customer Voice</h2>
+    <p class="text-muted fs-5">What people are saying about your delicacies</p>
+  </div>
+
+  <div *ngIf="loading" class="text-center py-5">
+    <div class="spinner-border text-danger" role="status"></div>
+  </div>
+
+  <div *ngIf="!loading && reviews.length === 0" class="text-center py-5 bg-white rounded-5 shadow-sm">
+    <i class="bi bi-chat-heart display-1 text-muted mb-4 d-block"></i>
+    <h3 class="fw-bold">No reviews yet</h3>
+    <p class="text-secondary">Keep cooking great food, reviews will flourish soon!</p>
+  </div>
+
+  <div class="row g-4" *ngIf="!loading && reviews.length > 0">
+    <div class="col-md-6" *ngFor="let review of reviews">
+      <div class="card border-0 shadow-sm rounded-4 h-100 review-card overflow-hidden">
+        <div class="card-body p-4 p-md-5">
+          <div class="d-flex justify-content-between align-items-start mb-4">
+            <div>
+              <p class="fw-bold mb-0 fs-5 text-dark">Order #{{ review.orderId }}</p>
+              <p class="text-muted small mb-0">{{ review.createdAt | date:'medium' }}</p>
+            </div>
+            <div class="bg-light rounded-pill px-3 py-1 fw-bold text-dark shadow-sm fs-4">
+                {{ review.foodRating }}<i class="bi bi-star-fill text-warning ms-1"></i>
+            </div>
+          </div>
+
+          <div class="bg-light bg-opacity-50 rounded-4 p-4 mb-4 border border-light">
+             <p class="mb-0 fs-5 lh-lg text-dark fw-medium">"{{ review.comment || 'No comment left but the food was great!' }}"</p>
+          </div>
+
+          <div class="row align-items-center">
+             <div class="col-6">
+                <p class="text-muted small fw-bold text-uppercase letter-spacing-1 mb-1">Food</p>
+                <div class="text-warning">
+                   <i *ngFor="let s of [1,2,3,4,5]" class="bi" [class.bi-star-fill]="review.foodRating >= s" [class.bi-star]="review.foodRating < s"></i>
+                </div>
+             </div>
+             <div class="col-6 border-start ps-4">
+                <p class="text-muted small fw-bold text-uppercase letter-spacing-1 mb-1">Delivery Agent</p>
+                <div class="text-primary">
+                    <span class="fw-bold">{{ review.deliveryRating }}/5</span> <i class="bi bi-truck ms-1"></i>
+                </div>
+             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

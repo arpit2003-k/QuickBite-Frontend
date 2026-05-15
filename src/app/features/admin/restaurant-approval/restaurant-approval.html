@@ -1,0 +1,104 @@
+<div class="bg-dark text-white py-5 mb-4 shadow">
+  <div class="container-fluid">
+    <div class="row align-items-center">
+      <div class="col-md-8">
+        <h1 class="display-5 fw-bold mb-1">Admin Control Center</h1>
+        <p class="lead opacity-75 mb-0">Platform-wide management and oversight dashboard</p>
+      </div>
+      <div class="col-md-4 text-md-end pt-3 pt-md-0">
+        <div class="badge bg-danger rounded-pill px-4 py-2 fs-6">System Administrator</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid">
+  <ul class="nav nav-pills mb-4 gap-2 bg-white p-2 rounded-pill shadow-sm d-inline-flex border">
+    <li class="nav-item">
+      <a class="nav-link rounded-pill fw-bold text-dark" routerLink="/admin/users" routerLinkActive="active"><i class="bi bi-people me-2"></i>Users</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link rounded-pill fw-bold text-dark" routerLink="/admin/restaurants" routerLinkActive="active"><i class="bi bi-shop me-2"></i>Restaurants</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link rounded-pill fw-bold text-dark" routerLink="/admin/agents" routerLinkActive="active"><i class="bi bi-bicycle me-2"></i>Agents</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link rounded-pill fw-bold text-dark" routerLink="/admin/analytics" routerLinkActive="active"><i class="bi bi-graph-up-arrow me-2"></i>Analytics</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link rounded-pill fw-bold text-dark" routerLink="/admin/reviews" routerLinkActive="active"><i class="bi bi-star me-2"></i>Reviews</a>
+    </li>
+  </ul>
+
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h2 class="fw-bold mb-0">Restaurant Management</h2>
+      <p class="text-muted small">Verify registration requests and manage active stores</p>
+    </div>
+    <div class="btn-group rounded-pill shadow-sm bg-white p-1">
+      <button (click)="filter = 'PENDING'" [class.active]="filter === 'PENDING'" class="btn btn-sm px-4 rounded-pill">Pending</button>
+      <button (click)="filter = 'APPROVED'" [class.active]="filter === 'APPROVED'" class="btn btn-sm px-4 rounded-pill">Approved</button>
+    </div>
+  </div>
+
+  <div class="row g-4">
+    <div class="col-md-6 col-lg-4" *ngFor="let restaurant of filteredRestaurants">
+      <div class="card border-0 shadow-sm rounded-4 h-100 overflow-hidden">
+        <div class="position-relative">
+          <img [src]="restaurant.imageUrl" class="card-img-top" style="height: 180px; object-fit: cover;" onerror="this.src='https://images.unsplash.com/photo-1517248135467-4c7edcad34c4'">
+          <div class="position-absolute top-0 end-0 m-3">
+             <span class="badge rounded-pill" [ngClass]="restaurant.isApproved ? 'bg-success' : 'bg-warning text-dark'">
+                {{ restaurant.isApproved ? 'Approved' : 'Pending Verification' }}
+             </span>
+          </div>
+        </div>
+        <div class="card-body p-4">
+          <h5 class="fw-bold mb-1">{{ restaurant.name }}</h5>
+          <p class="text-muted small mb-3"><i class="bi bi-geo-alt me-1"></i>{{ restaurant.city }}</p>
+          
+          <div class="d-flex flex-wrap gap-2 mb-4">
+            <span class="badge bg-light text-dark border small">{{ restaurant.cuisine }}</span>
+            <span class="badge bg-light text-dark border small">{{ restaurant.minOrderAmount | currency:'INR':'symbol':'1.0-0' }} Min</span>
+          </div>
+
+          <div class="p-3 bg-light rounded-4 mb-4 small">
+            <div class="d-flex justify-content-between mb-1">
+              <span>Owner ID:</span>
+              <span class="fw-bold">{{ restaurant.ownerId }}</span>
+            </div>
+            <div class="d-flex justify-content-between">
+              <span>Phone:</span>
+              <span class="fw-bold">{{ restaurant.phone }}</span>
+            </div>
+          </div>
+
+          <div class="d-flex gap-2">
+            <ng-container *ngIf="!restaurant.isApproved">
+              <button (click)="approve(restaurant.restaurantId || restaurant.id)" class="btn btn-success rounded-pill flex-grow-1 fw-bold">Approve</button>
+              <button (click)="reject(restaurant.restaurantId || restaurant.id)" class="btn btn-outline-danger rounded-pill flex-grow-1 fw-bold">Reject</button>
+            </ng-container>
+            <ng-container *ngIf="restaurant.isApproved">
+              <button (click)="revoke(restaurant.restaurantId || restaurant.id)" class="btn btn-danger rounded-pill flex-grow-1 fw-bold">Revoke Approval</button>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="filteredRestaurants.length === 0 && !loading" class="col-12 py-5 text-center">
+      <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+        <i class="bi bi-check-circle text-success h2 mb-0"></i>
+      </div>
+      <h4 class="fw-bold">No {{ filter.toLowerCase() }} restaurants</h4>
+      <p class="text-muted">All caught up with this category.</p>
+    </div>
+  </div>
+</div>
+
+<style>
+  .btn-group .active {
+    background-color: #dc3545 !important;
+    color: white !important;
+  }
+</style>

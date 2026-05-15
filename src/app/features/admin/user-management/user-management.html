@@ -1,0 +1,117 @@
+<div class="glass-panel p-5 mb-5 mx-3 mt-3 position-relative overflow-hidden" style="background: linear-gradient(135deg, rgba(47, 53, 66, 0.9), rgba(30, 39, 46, 0.95)); border: none;">
+  <div class="position-absolute top-0 end-0 opacity-10" style="transform: scale(2) translate(10%, -10%);">
+    <i class="bi bi-shield-lock-fill text-white" style="font-size: 15rem;"></i>
+  </div>
+  <div class="container-fluid position-relative z-1 text-white">
+    <div class="row align-items-center">
+      <div class="col-md-8">
+        <h1 class="display-4 fw-bold mb-2">Admin Control Center</h1>
+        <p class="fs-5 opacity-75 mb-0">Platform-wide management and oversight dashboard</p>
+      </div>
+      <div class="col-md-4 text-md-end pt-3 pt-md-0">
+        <div class="badge bg-danger rounded-pill px-4 py-2 fs-6 shadow">System Administrator</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid">
+  <ul class="nav nav-pills mb-4 gap-2 bg-white p-2 rounded-pill shadow-sm d-inline-flex border">
+    <li class="nav-item">
+      <a class="nav-link rounded-pill fw-bold text-dark" routerLink="/admin/users" routerLinkActive="active"><i class="bi bi-people me-2"></i>Users</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link rounded-pill fw-bold text-dark" routerLink="/admin/restaurants" routerLinkActive="active"><i class="bi bi-shop me-2"></i>Restaurants</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link rounded-pill fw-bold text-dark" routerLink="/admin/agents" routerLinkActive="active"><i class="bi bi-bicycle me-2"></i>Agents</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link rounded-pill fw-bold text-dark" routerLink="/admin/analytics" routerLinkActive="active"><i class="bi bi-graph-up-arrow me-2"></i>Analytics</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link rounded-pill fw-bold text-dark" routerLink="/admin/reviews" routerLinkActive="active"><i class="bi bi-star me-2"></i>Reviews</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link rounded-pill fw-bold text-dark" routerLink="/admin/broadcast" routerLinkActive="active"><i class="bi bi-megaphone me-2"></i>Broadcast</a>
+    </li>
+  </ul>
+
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h2 class="fw-bold mb-0">User Management</h2>
+      <p class="text-muted small">Monitor and moderate user accounts across the platform</p>
+    </div>
+    <div class="btn-group rounded-pill shadow-sm bg-white p-1">
+      <button (click)="filter = 'ALL'" [class.active]="filter === 'ALL'" class="btn btn-sm px-3 rounded-pill">All</button>
+      <button (click)="filter = 'CUSTOMER'" [class.active]="filter === 'CUSTOMER'" class="btn btn-sm px-3 rounded-pill">Customers</button>
+      <button (click)="filter = 'RESTAURANT_OWNER'" [class.active]="filter === 'RESTAURANT_OWNER'" class="btn btn-sm px-3 rounded-pill">Owners</button>
+      <button (click)="filter = 'DELIVERY_AGENT'" [class.active]="filter === 'DELIVERY_AGENT'" class="btn btn-sm px-3 rounded-pill">Agents</button>
+    </div>
+  </div>
+
+  <div class="card border-0 shadow-sm rounded-4">
+    <div class="table-responsive">
+      <table class="table table-hover align-middle mb-0">
+        <thead class="bg-light text-muted small text-uppercase fw-bold">
+          <tr>
+            <th class="ps-4">User</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Status</th>
+            <th class="text-end pe-4">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of filteredUsers">
+            <td class="ps-4">
+              <div class="d-flex align-items-center">
+                <div class="avatar-sm me-3 text-white rounded-circle bg-danger bg-gradient d-flex align-items-center justify-content-center fw-bold">
+                  {{ user.fullName.charAt(0) }}
+                </div>
+                <div>
+                  <div class="fw-bold">{{ user.fullName }}</div>
+                  <div class="text-muted small">ID: {{ user.userId }}</div>
+                </div>
+              </div>
+            </td>
+            <td>{{ user.email }}</td>
+            <td>
+              <span class="badge rounded-pill" [ngClass]="{
+                'bg-info text-dark': user.role === 'CUSTOMER',
+                'bg-warning text-dark': user.role === 'RESTAURANT_OWNER',
+                'bg-dark text-white': user.role === 'DELIVERY_AGENT',
+                'bg-danger text-white': user.role === 'ADMIN'
+              }">{{ user.role }}</span>
+            </td>
+            <td>
+              <span class="d-flex align-items-center">
+                <span class="dot me-2" [ngClass]="user.isActive ? 'bg-success' : 'bg-danger'"></span>
+                {{ user.isActive ? 'Active' : 'Suspended' }}
+              </span>
+            </td>
+            <td class="text-end pe-4">
+              <button (click)="toggleStatus(user.userId || user.id, user.isActive)" 
+                      class="btn btn-sm rounded-pill px-3"
+                      [ngClass]="user.isActive ? 'btn-outline-danger' : 'btn-success'">
+                {{ user.isActive ? 'Suspend' : 'Activate' }}
+              </button>
+            </td>
+          </tr>
+          <tr *ngIf="users.length === 0 && !loading">
+            <td colspan="5" class="text-center py-5 text-muted">No users found</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<style>
+  .btn-group .active {
+    background-color: #dc3545 !important;
+    color: white !important;
+  }
+  .avatar-sm { width: 40px; height: 40px; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+</style>

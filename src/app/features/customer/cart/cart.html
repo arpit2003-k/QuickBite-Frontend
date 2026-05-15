@@ -1,0 +1,104 @@
+<div class="container my-5 fade-in">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="display-5 fw-bold mb-0">Your Cart</h2>
+    <a routerLink="/restaurants" class="btn btn-outline-secondary rounded-pill px-4" *ngIf="cart?.items?.length"><i class="bi bi-arrow-left me-2"></i>Continue Shopping</a>
+  </div>
+  
+  <div *ngIf="loading" class="text-center py-5">
+    <div class="spinner-border text-danger" role="status"></div>
+  </div>
+
+  <div *ngIf="!loading && (!cart || !cart.items || cart.items.length === 0)" class="text-center py-5 empty-cart bg-white shadow-sm rounded-4 animate-fade-in">
+    <i class="bi bi-cart-x display-1 text-muted mb-3 d-block"></i>
+    <h3 class="text-muted fw-bold">Your cart is empty</h3>
+    <p class="text-secondary mb-4">You haven't added anything to your cart yet.</p>
+    <a routerLink="/restaurants" class="btn btn-primary btn-lg px-5 py-3 rounded-pill fw-bold shadow-sm">Explore Restaurants</a>
+  </div>
+
+  <div class="row animate-fade-in" *ngIf="!loading && cart && cart.items && cart.items.length > 0">
+    <div class="col-lg-8 mb-4 stagger-1">
+      <div class="card border-0 shadow-sm rounded-4 mb-4 overflow-hidden">
+        <div class="card-header bg-white border-light p-4 d-flex justify-content-between align-items-center">
+          <h4 class="mb-0 fw-bold">Cart Items</h4>
+          <button class="btn btn-sm btn-outline-danger rounded-pill px-3 fw-bold" (click)="clearCart()">Clear Cart</button>
+        </div>
+        
+        <div class="card-body p-0">
+          <div class="table-responsive">
+            <table class="table align-middle mb-0">
+              <thead class="bg-light text-muted">
+                <tr>
+                  <th scope="col" class="border-0 px-4 py-3 fw-semibold">Item</th>
+                  <th scope="col" class="border-0 py-3 fw-semibold">Price</th>
+                  <th scope="col" class="border-0 py-3 text-center fw-semibold">Quantity</th>
+                  <th scope="col" class="border-0 py-3 text-end fw-semibold">Subtotal</th>
+                  <th scope="col" class="border-0 py-3 text-center fw-semibold">Action</th>
+                </tr>
+              </thead>
+              <tbody class="border-top-0">
+                <tr *ngFor="let item of cart.items" class="border-bottom border-light">
+                  <td class="px-4 py-4 fw-bold text-dark">{{ item.name }}</td>
+                  <td class="py-4 text-muted">₹{{ item.price }}</td>
+                  <td class="py-4">
+                    <div class="d-flex justify-content-center align-items-center">
+                      <button class="btn btn-sm text-secondary bg-light border-0 rounded-circle qty-btn d-flex align-items-center justify-content-center" style="width: 30px; height: 30px;" (click)="updateQuantity(item, -1)">
+                        <i class="bi bi-dash fw-bold"></i>
+                      </button>
+                      <span class="mx-3 fw-bold fs-5">{{ item.quantity }}</span>
+                      <button class="btn btn-sm text-secondary bg-light border-0 rounded-circle qty-btn d-flex align-items-center justify-content-center" style="width: 30px; height: 30px;" (click)="updateQuantity(item, 1)">
+                        <i class="bi bi-plus fw-bold"></i>
+                      </button>
+                    </div>
+                  </td>
+                  <td class="py-4 text-end fw-bold fs-5">₹{{ item.subtotal }}</td>
+                  <td class="py-4 text-center">
+                    <button class="btn btn-link text-danger p-0 delete-btn" (click)="removeItem(item.menuItemId)">
+                      <i class="bi bi-trash3-fill fs-5"></i>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-lg-4 stagger-2">
+      <div class="card interactive-card border-0 shadow-sm rounded-4 sticky-top" style="top: 2rem;">
+        <div class="card-body p-4">
+          <h4 class="fw-bold mb-4">Order Summary</h4>
+          
+          <div class="mb-4 bg-light p-3 rounded-4">
+            <div class="input-group">
+              <input type="text" class="form-control bg-white border-0 shadow-sm" placeholder="Promo Code" [(ngModel)]="promoCode">
+              <button class="btn btn-outline-primary fw-bold shadow-sm" (click)="applyPromo()">Apply</button>
+            </div>
+            <div *ngIf="promoError" class="text-danger small mt-2 fw-medium"><i class="bi bi-exclamation-circle me-1"></i>{{ promoError }}</div>
+            <div *ngIf="promoSuccess" class="text-success small mt-2 fw-medium"><i class="bi bi-check-circle me-1"></i>{{ promoSuccess }}</div>
+          </div>
+          
+          <div class="d-flex justify-content-between mb-3 text-muted">
+            <span class="fw-medium">Item Total</span>
+            <span class="fw-bold text-dark">₹{{ cart.totalPrice }}</span>
+          </div>
+          <div class="d-flex justify-content-between mb-3 text-muted">
+            <span class="fw-medium">Delivery Fee</span>
+            <span class="fw-bold text-success">FREE</span>
+          </div>
+          
+          <hr class="text-muted opacity-25 my-4">
+          
+          <div class="d-flex justify-content-between mb-4">
+            <span class="fs-4 fw-bold">Total</span>
+            <span class="fs-4 fw-bold text-danger">₹{{ cart.totalPrice }}</span>
+          </div>
+          
+          <button class="btn btn-primary w-100 py-3 rounded-pill fw-bold fs-5 shadow-sm proceed-btn" (click)="proceedToCheckout()">
+            Proceed to Checkout
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

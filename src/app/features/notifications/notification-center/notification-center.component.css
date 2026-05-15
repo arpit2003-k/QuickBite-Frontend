@@ -1,0 +1,27 @@
+.bg-dark-gradient {
+  background: linear-gradient(135deg, #1f2937, #111827);
+}
+
+.text-primary-custom {
+  color: #ff9f43 !important;
+}
+
+.bg-primary-custom {
+  background-color: #ff9f43 !important;
+}
+
+.notification-item {
+  transition: all 0.2s ease;
+}
+
+.notification-item:hover {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.hover-opacity-100:hover {
+  opacity: 1 !important;
+}

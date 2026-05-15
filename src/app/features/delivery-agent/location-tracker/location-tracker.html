@@ -1,0 +1,95 @@
+<div class="container my-5 fade-in">
+  <div class="text-center mb-5">
+    <div class="icon-box bg-indigo bg-opacity-10 text-indigo rounded-circle mx-auto mb-4 scale-up" style="width: 100px; height: 100px; display: flex; align-items: center; justify-content: center;">
+      <i class="bi bi-broadcast display-4"></i>
+    </div>
+    <h2 class="display-5 fw-bold">Live GPS Tracker</h2>
+    <p class="text-muted fs-5">Sharing your real-time position with customers</p>
+  </div>
+
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      
+      <div class="card border-0 shadow-lg rounded-5 overflow-hidden p-4 p-md-5">
+        <div class="row align-items-center mb-4">
+           <div class="col-8">
+              <h4 class="fw-bold mb-0">Tracker Status</h4>
+           </div>
+           <div class="col-4 text-end">
+              <span class="badge rounded-pill px-3 py-2 fw-bold" [class.bg-success]="isTracking" [class.bg-danger]="!isTracking">
+                 {{ isTracking ? 'ACTIVE' : 'INACTIVE' }}
+              </span>
+           </div>
+        </div>
+
+        <div *ngIf="isTracking && currentPos" class="bg-light rounded-4 p-4 mb-4 border">
+           <div class="row g-3">
+              <div class="col-md-6">
+                 <p class="text-muted small fw-bold text-uppercase mb-1">Latitude</p>
+                 <div class="fw-bold fs-4">{{ currentPos.lat.toFixed(6) }}</div>
+              </div>
+              <div class="col-md-6">
+                 <p class="text-muted small fw-bold text-uppercase mb-1">Longitude</p>
+                 <div class="fw-bold fs-4">{{ currentPos.lng.toFixed(6) }}</div>
+              </div>
+              <div class="col-12 mt-4">
+                 <div class="progress rounded-pill shadow-sm" style="height: 10px;">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-indigo" style="width: 100%"></div>
+                 </div>
+                 <p class="text-center text-indigo small fw-bold mt-2 mb-0">Sending updates every change...</p>
+              </div>
+           </div>
+        </div>
+
+        <div class="agent-map-shell mb-4" *ngIf="!loadingTracking">
+          <div class="agent-map-header">
+            <div>
+              <p class="map-kicker mb-1">Live Delivery Route</p>
+              <h5 class="fw-bold mb-1">{{ activeOrder ? ('Order #' + (activeOrder.orderNumber || activeOrder.orderId || activeOrder.id)) : 'No active delivery right now' }}</h5>
+              <p class="text-muted mb-0" *ngIf="activeOrder">See your route to the restaurant and then to the customer.</p>
+              <p class="text-muted mb-0" *ngIf="!activeOrder">Once an order is assigned, the map will appear here automatically.</p>
+            </div>
+            <div class="eta-pill" *ngIf="combinedEta">
+              <span class="eta-value">{{ combinedEta }}</span>
+              <small>min total ETA</small>
+            </div>
+          </div>
+
+          <div id="agent-tracking-map" class="agent-tracking-map"></div>
+
+          <div class="route-metrics" *ngIf="tracking">
+            <div class="metric-card" *ngIf="tracking.agentToRestaurant">
+              <span>From you to restaurant</span>
+              <strong>{{ tracking.agentToRestaurant.distanceKm }} km</strong>
+              <small>{{ tracking.agentToRestaurant.estimatedMinutes }} min</small>
+            </div>
+            <div class="metric-card" *ngIf="tracking.restaurantToCustomer">
+              <span>Restaurant to customer</span>
+              <strong>{{ tracking.restaurantToCustomer.distanceKm }} km</strong>
+              <small>{{ tracking.restaurantToCustomer.estimatedMinutes }} min</small>
+            </div>
+            <div class="metric-card" *ngIf="tracking.agentToCustomer">
+              <span>Your location to customer</span>
+              <strong>{{ tracking.agentToCustomer.distanceKm }} km</strong>
+              <small>{{ tracking.agentToCustomer.estimatedMinutes }} min</small>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="!isTracking" class="alert alert-danger rounded-4 py-4 d-flex align-items-center">
+           <i class="bi bi-slash-circle fs-3 me-3"></i>
+           <div>
+              <h6 class="fw-bold mb-0">Tracking Disabled</h6>
+              <p class="mb-0 small opacity-75">Please allow location permissions in your browser settings.</p>
+           </div>
+        </div>
+
+        <div class="text-secondary text-center">
+           <p class="mb-1"><i class="bi bi-clock me-2"></i>Last synced: {{ lastUpdate ? (lastUpdate | date:'h:mm:ss a') : 'Never' }}</p>
+           <p class="small mb-0">Accuracy: ±{{ currentPos?.accuracy?.toFixed(1) || 0 }} meters</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

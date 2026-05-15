@@ -1,0 +1,147 @@
+<div class="container my-5 fade-in">
+  <div class="d-flex justify-content-between align-items-center mb-5">
+    <div>
+      <h2 class="display-5 fw-bold mb-0">Menu Management</h2>
+      <p class="text-muted fs-5">Customize your offerings and prices</p>
+    </div>
+    <button class="btn btn-danger rounded-pill px-4 fw-bold shadow-sm" (click)="openCategoryModal()">
+      <i class="bi bi-folder-plus me-2"></i>Add Category
+    </button>
+  </div>
+
+  <div *ngIf="loading" class="text-center py-5">
+    <div class="spinner-border text-danger" role="status"></div>
+  </div>
+
+  <div *ngIf="!loading && restaurant">
+    
+    <div *ngFor="let cat of categories" class="card border-0 shadow-sm rounded-4 mb-5 overflow-hidden">
+      <div class="card-header bg-dark text-white p-4 d-flex justify-content-between align-items-center">
+        <h4 class="mb-0 fw-bold">{{ cat.name }}</h4>
+        <div class="d-flex gap-2">
+          <button class="btn btn-sm btn-outline-light rounded-pill px-3" (click)="openCategoryModal(cat)">Edit</button>
+          <button class="btn btn-sm btn-outline-danger rounded-pill px-3" (click)="deleteCategory(cat.categoryId)">Delete</button>
+          <button class="btn btn-sm btn-danger rounded-pill px-3" (click)="openItemModal(null, cat.categoryId)">+ Add Item</button>
+        </div>
+      </div>
+      <div class="card-body p-4">
+        <div class="table-responsive">
+          <table class="table table-hover align-middle">
+            <thead class="bg-light">
+              <tr class="text-muted small text-uppercase fw-bold letter-spacing-1">
+                <th>Item</th>
+                <th>Price</th>
+                <th>Diet</th>
+                <th>Status</th>
+                <th class="text-end">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of getItemsByCategory(cat.categoryId)">
+                <td>
+                  <p class="mb-0 fw-bold fs-5">{{ item.name }}</p>
+                  <p class="text-muted small mb-0">{{ item.description }}</p>
+                </td>
+                <td>
+                  <span class="fw-bold">₹{{ item.price }}</span>
+                  <span *ngIf="item.discountedPrice" class="text-muted small ms-2 text-decoration-line-through">₹{{ item.discountedPrice }}</span>
+                </td>
+                <td>
+                  <i class="bi bi-record-circle-fill" [class.text-success]="item.isVeg" [class.text-danger]="!item.isVeg"></i>
+                  <span class="small ms-1">{{ item.isVeg ? 'Veg' : 'Non-Veg' }}</span>
+                </td>
+                <td>
+                  <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" [checked]="item.isAvailable" (change)="toggleAvailability(item)">
+                    <label class="form-check-label small">{{ item.isAvailable ? 'Available' : 'Sold Out' }}</label>
+                  </div>
+                </td>
+                <td class="text-end">
+                  <button class="btn btn-light btn-sm rounded-circle me-2" (click)="openItemModal(item)"><i class="bi bi-pencil-fill text-primary"></i></button>
+                  <button class="btn btn-light btn-sm rounded-circle" (click)="deleteItem(item.itemId)"><i class="bi bi-trash-fill text-danger"></i></button>
+                </td>
+              </tr>
+              <tr *ngIf="getItemsByCategory(cat.categoryId).length === 0">
+                <td colspan="5" class="text-center py-4 text-muted">No items in this category. Click "+ Add Item" to begin.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Category Modal -->
+  <div class="modal-backdrop fade show" *ngIf="showCategoryModal"></div>
+  <div class="modal fade show d-block" *ngIf="showCategoryModal">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 shadow-lg rounded-4">
+        <div class="modal-header border-0 pb-0">
+          <h5 class="modal-title fw-bold">{{ editingCategory ? 'Edit Category' : 'New Category' }}</h5>
+          <button type="button" class="btn-close" (click)="showCategoryModal = false"></button>
+        </div>
+        <div class="modal-body p-4">
+          <div class="mb-3">
+            <label class="form-label fw-bold small text-muted">Category Name</label>
+            <input type="text" class="form-control rounded-3" [(ngModel)]="categoryName" placeholder="e.g. Main Course, Desserts">
+          </div>
+          <button class="btn btn-danger w-100 py-2 rounded-pill fw-bold" (click)="saveCategory()">Save Category</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Item Modal -->
+  <div class="modal-backdrop fade show" *ngIf="showItemModal"></div>
+  <div class="modal fade show d-block" *ngIf="showItemModal">
+    <div class="modal-dialog modal-dialog-lg modal-dialog-centered">
+      <div class="modal-content border-0 shadow-lg rounded-4">
+        <div class="modal-header border-0 pb-0">
+          <h5 class="modal-title fw-bold">{{ editingItem ? 'Edit Item' : 'New Menu Item' }}</h5>
+          <button type="button" class="btn-close" (click)="showItemModal = false"></button>
+        </div>
+        <div class="modal-body p-4">
+          <div class="row g-3">
+            <div class="col-12">
+              <label class="form-label fw-bold small text-muted">Item Name</label>
+              <input type="text" class="form-control rounded-3" [(ngModel)]="itemForm.name">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-bold small text-muted">Base Price (₹)</label>
+              <input type="number" class="form-control rounded-3" [(ngModel)]="itemForm.price">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-bold small text-muted">Discounted Price (optional)</label>
+              <input type="number" class="form-control rounded-3" [(ngModel)]="itemForm.discountedPrice">
+            </div>
+            <div class="col-12">
+              <label class="form-label fw-bold small text-muted">Category</label>
+              <select class="form-select rounded-3" [(ngModel)]="itemForm.categoryId">
+                <option *ngFor="let c of categories" [value]="c.categoryId">{{ c.name }}</option>
+              </select>
+            </div>
+            <div class="col-12">
+              <label class="form-label fw-bold small text-muted">Description</label>
+              <textarea class="form-control rounded-3" rows="2" [(ngModel)]="itemForm.description"></textarea>
+            </div>
+            <div class="col-6">
+              <div class="form-check form-switch mt-2">
+                <input class="form-check-input" type="checkbox" [(ngModel)]="itemForm.isVeg">
+                <label class="form-check-label fw-bold small">Is Vegetarian</label>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="form-check form-switch mt-2">
+                <input class="form-check-input" type="checkbox" [(ngModel)]="itemForm.isAvailable">
+                <label class="form-check-label fw-bold small">Is Available</label>
+              </div>
+            </div>
+          </div>
+          <button class="btn btn-danger w-100 py-3 rounded-pill fw-bold mt-4 shadow-sm" (click)="saveItem()">Save Life-Saving Item</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

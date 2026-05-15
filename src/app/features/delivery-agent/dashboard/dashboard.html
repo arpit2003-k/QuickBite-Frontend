@@ -1,0 +1,110 @@
+<div class="container my-5 fade-in">
+  <div *ngIf="loading" class="text-center py-5">
+    <div class="spinner-border text-danger" role="status"></div>
+  </div>
+
+  <div *ngIf="!loading && agent">
+    <!-- Header Card -->
+    <div class="glass-panel border-0 mb-5 text-white position-relative overflow-hidden" style="background: var(--qb-gradient-dark);">
+      <div class="position-absolute top-0 end-0 opacity-10" style="transform: scale(1.5) translate(10%, -10%);">
+        <i class="bi bi-bicycle text-white" style="font-size: 15rem;"></i>
+      </div>
+      <div class="card-body p-4 p-md-5 position-relative z-1">
+        <div class="row align-items-center">
+          <div class="col-md-2 text-center mb-4 mb-md-0">
+            <div class="bg-primary-gradient rounded-circle d-inline-flex align-items-center justify-content-center shadow-lg" style="width: 100px; height: 100px;">
+              <i class="bi bi-person-badge display-4 text-white"></i>
+            </div>
+          </div>
+          <div class="col-md-6 mb-4 mb-md-0">
+            <h2 class="display-6 fw-bold mb-1">{{ agent.name }}</h2>
+            <p class="fs-5 opacity-75 mb-0"><i class="bi bi-bicycle me-2 text-primary-custom"></i>{{ agent.vehicleNumber }}</p>
+            <div class="mt-2">
+              <span class="badge bg-white text-dark rounded-pill px-3 py-2 fw-bold shadow-sm">
+                <i class="bi bi-star-fill text-warning me-1"></i> {{ agent.currentRating }} Rating
+              </span>
+            </div>
+          </div>
+          <div class="col-md-4 text-md-end">
+            <div class="bg-white bg-opacity-10 rounded-4 p-4 text-center border border-white border-opacity-10 shadow-sm backdrop-blur">
+               <p class="small fw-bold text-uppercase opacity-75 mb-3">Service Status</p>
+               <div class="form-check form-switch d-inline-block p-0">
+                  <input class="form-check-input ms-0 me-3 shadow-none pointer-cursor" 
+                         type="checkbox" 
+                         role="switch" 
+                         style="width: 3.5rem; height: 2rem;"
+                         [checked]="agent.isAvailable"
+                         (change)="toggleAvailability()">
+               </div>
+               <p class="mt-2 mb-0 fw-bold fs-5" [class.text-success]="agent.isAvailable" [class.text-white-50]="!agent.isAvailable">
+                  {{ agent.isAvailable ? 'ONLINE' : 'OFFLINE' }}
+               </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Links -->
+    <div class="row g-4 mb-5">
+       <div class="col-md-3">
+          <a routerLink="../assigned-orders" class="card border-0 shadow-sm rounded-4 text-decoration-none text-dark hover-lift h-100">
+             <div class="card-body p-4 text-center">
+                <div class="icon-box bg-danger bg-opacity-10 text-danger rounded-3 mx-auto mb-3" style="width: 60px; height: 60px; display: flex; align-items: center; justify-content: center;">
+                   <i class="bi bi-box-seam fs-3"></i>
+                </div>
+                <h5 class="fw-bold mb-1">Assigned Tasks</h5>
+                <p class="text-muted small mb-0">View and manage your deliveries</p>
+             </div>
+          </a>
+       </div>
+       <div class="col-md-3">
+          <a routerLink="../location-tracker" class="card border-0 shadow-sm rounded-4 text-decoration-none text-dark hover-lift h-100">
+             <div class="card-body p-4 text-center">
+                <div class="icon-box bg-indigo bg-opacity-10 text-indigo rounded-3 mx-auto mb-3" style="width: 60px; height: 60px; display: flex; align-items: center; justify-content: center;">
+                   <i class="bi bi-geo-alt fs-3"></i>
+                </div>
+                <h5 class="fw-bold mb-1">Live Tracker</h5>
+                <p class="text-muted small mb-0">Share your current location</p>
+             </div>
+          </a>
+       </div>
+       <div class="col-md-3">
+          <a routerLink="../earnings" class="card border-0 shadow-sm rounded-4 text-decoration-none text-dark hover-lift h-100">
+             <div class="card-body p-4 text-center">
+                <div class="icon-box bg-success bg-opacity-10 text-success rounded-3 mx-auto mb-3" style="width: 60px; height: 60px; display: flex; align-items: center; justify-content: center;">
+                   <i class="bi bi-wallet2 fs-3"></i>
+                </div>
+                <h5 class="fw-bold mb-1">Earnings</h5>
+                <p class="text-muted small mb-0">Check your daily payouts</p>
+             </div>
+          </a>
+       </div>
+       <div class="col-md-3">
+          <a routerLink="/notifications" class="card border-0 shadow-sm rounded-4 text-decoration-none text-dark hover-lift h-100">
+             <div class="card-body p-4 text-center">
+                <div class="icon-box bg-warning bg-opacity-10 text-warning rounded-3 mx-auto mb-3" style="width: 60px; height: 60px; display: flex; align-items: center; justify-content: center;">
+                   <i class="bi bi-bell fs-3"></i>
+                </div>
+                <h5 class="fw-bold mb-1">Notifications</h5>
+                <p class="text-muted small mb-0">Platform updates and alerts</p>
+             </div>
+          </a>
+       </div>
+    </div>
+
+    <!-- Active Status Info -->
+    <div class="alert rounded-4 border-0 shadow-sm p-4 d-flex align-items-center" 
+         [class.alert-success]="agent.isAvailable" 
+         [class.alert-warning]="!agent.isAvailable">
+      <i class="bi fs-2 me-4" [class.bi-check-circle-fill]="agent.isAvailable" [class.bi-exclamation-triangle-fill]="!agent.isAvailable"></i>
+      <div>
+         <h5 class="fw-bold mb-1">{{ agent.isAvailable ? 'Ready for deliveries!' : 'Currently Offline' }}</h5>
+         <p class="mb-0 opacity-75">
+            {{ agent.isAvailable ? 'New tasks will appear in your "Assigned Tasks" section.' : 'Go online to start receiving new delivery tasks from nearby restaurants.' }}
+         </p>
+      </div>
+    </div>
+
+  </div>
+</div>

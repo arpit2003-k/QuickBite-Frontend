@@ -1,1 +1,200 @@
-/* You can add global styles to this file, and also import other style files */
+/* Global Design System for QuickBite */
+
+:root {
+  /* Brand Colors */
+  --qb-primary: #FF4757;      /* Vibrant Red/Coral */
+  --qb-primary-dark: #FF1E32; /* Deeper Red for hover states */
+  --qb-primary-light: #FF9EAA;/* Light Red for backgrounds */
+  --qb-secondary: #2ED573;    /* Fresh Green */
+  --qb-accent: #FFA502;       /* Warm Orange */
+  
+  /* Neutral/Dark Mode Base */
+  --qb-dark: #2F3542;         /* Deep Blue/Grey */
+  --qb-darker: #1E272E;       /* Background Dark */
+  --qb-light: #F1F2F6;        /* Subtle Off-White */
+  --qb-white: #FFFFFF;
+  
+  /* Text Colors */
+  --qb-text-main: #2F3542;
+  --qb-text-muted: #57606F;
+  
+  /* Gradients */
+  --qb-gradient-primary: linear-gradient(135deg, #FF4757, #FF7B89);
+  --qb-gradient-dark: linear-gradient(135deg, #2F3542, #1E272E);
+  
+  /* Shadows */
+  --qb-shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.05);
+  --qb-shadow-md: 0 8px 24px rgba(0, 0, 0, 0.08);
+  --qb-shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.12);
+  --qb-shadow-glow: 0 8px 24px rgba(255, 71, 87, 0.3);
+  
+  /* Border Radius */
+  --qb-radius-sm: 0.5rem;
+  --qb-radius-md: 1rem;
+  --qb-radius-lg: 1.5rem;
+  --qb-radius-pill: 50rem;
+  
+  /* Glassmorphism */
+  --qb-glass-bg: rgba(255, 255, 255, 0.85);
+  --qb-glass-border: rgba(255, 255, 255, 0.4);
+  --qb-glass-blur: blur(12px);
+}
+
+/* Base Typography overrides */
+body {
+  font-family: 'Outfit', 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  color: var(--qb-text-main);
+  background-color: var(--qb-light);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+/* Custom Utility Classes */
+.bg-primary-gradient {
+  background: var(--qb-gradient-primary) !important;
+  color: white;
+}
+
+.text-primary-custom {
+  color: var(--qb-primary) !important;
+}
+
+.bg-dark-gradient {
+  background: var(--qb-gradient-dark) !important;
+  color: white;
+}
+
+/* Glass panel */
+.glass-panel {
+  background: var(--qb-glass-bg);
+  backdrop-filter: var(--qb-glass-blur);
+  -webkit-backdrop-filter: var(--qb-glass-blur);
+  border: 1px solid var(--qb-glass-border);
+  box-shadow: var(--qb-shadow-md);
+  border-radius: var(--qb-radius-lg);
+}
+
+/* Cards Polish */
+.card {
+  border: none;
+  border-radius: var(--qb-radius-md);
+  box-shadow: var(--qb-shadow-sm);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  background-color: var(--qb-white);
+}
+
+.card.interactive-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--qb-shadow-md);
+}
+
+.card-header {
+  background-color: transparent;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  padding: 1.5rem;
+}
+
+/* Buttons Polish */
+.btn {
+  border-radius: var(--qb-radius-pill);
+  font-family: 'Outfit', sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  padding: 0.6rem 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.btn-primary {
+  background-color: var(--qb-primary);
+  border-color: var(--qb-primary);
+  color: white;
+}
+
+.btn-primary:hover, .btn-primary:focus, .btn-primary:active {
+  background-color: var(--qb-primary-dark) !important;
+  border-color: var(--qb-primary-dark) !important;
+  box-shadow: var(--qb-shadow-glow);
+  transform: translateY(-2px);
+}
+
+.btn-outline-primary {
+  color: var(--qb-primary);
+  border-color: var(--qb-primary);
+}
+
+.btn-outline-primary:hover {
+  background-color: var(--qb-primary);
+  color: white;
+  box-shadow: var(--qb-shadow-glow);
+}
+
+/* Inputs & Badges */
+.form-control, .form-select {
+  border-radius: var(--qb-radius-sm);
+  padding: 0.8rem 1.2rem;
+  border: 1px solid rgba(0,0,0,0.1);
+  background-color: #F8F9FA;
+  transition: all 0.2s;
+  font-family: 'Inter', sans-serif;
+}
+
+.form-control:focus, .form-select:focus {
+  background-color: var(--qb-white);
+  border-color: var(--qb-primary-light);
+  box-shadow: 0 0 0 4px rgba(255, 71, 87, 0.15);
+}
+
+.badge {
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  padding: 0.5em 0.8em;
+  border-radius: var(--qb-radius-pill);
+}
+
+/* Navbar */
+.navbar {
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: var(--qb-shadow-sm);
+}
+
+/* Quick Animations */
+@keyframes fadeInSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeInSlideUp 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+.stagger-1 { animation-delay: 0.1s; }
+.stagger-2 { animation-delay: 0.2s; }
+.stagger-3 { animation-delay: 0.3s; }
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--qb-light);
+}
+::-webkit-scrollbar-thumb {
+  background: #C4C4C4;
+  border-radius: var(--qb-radius-pill);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--qb-text-muted);
+}

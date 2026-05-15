@@ -1,0 +1,93 @@
+<div class="container mt-5 pt-3 discover-shell">
+  
+  <div class="text-center mb-5 discover-hero">
+    <span class="discover-kicker">Curated for quick cravings</span>
+    <h1 class="display-4 fw-bold text-dark">Discover Great Food</h1>
+    <p class="lead text-muted">Find the best restaurants and flavors near you</p>
+  </div>
+
+  <div class="row mb-5">
+    <div class="col-md-8 mx-auto">
+      <div class="input-group input-group-lg shadow-sm rounded-pill overflow-hidden discover-search">
+        <span class="input-group-text bg-white border-0 ps-4">
+          <i class="bi bi-search text-muted"></i>
+        </span>
+        <input 
+          type="text" 
+          class="form-control border-0 py-3 shadow-none bg-white" 
+          placeholder="Search restaurants by name or cuisine..."
+          [(ngModel)]="searchQuery"
+          (ngModelChange)="filterRestaurants()"
+        >
+      </div>
+    </div>
+  </div>
+
+  <div class="filters-bar mb-5">
+    <div class="filters-copy">
+      <span class="filters-kicker">Quick Filters</span>
+      <h5 class="fw-bold mb-2">Refine what you discover</h5>
+      <p class="text-muted mb-0">Use lightweight filters to surface the restaurants that fit your mood faster.</p>
+      <div class="filters-highlights">
+        <span class="highlight-chip">{{ filteredRestaurants.length }} spots</span>
+        <span class="highlight-chip" *ngIf="selectedCuisine !== 'ALL'">{{ selectedCuisine }}</span>
+        <span class="highlight-chip" *ngIf="showOpenOnly">Open now</span>
+      </div>
+    </div>
+    <div class="filters-controls">
+      <div class="filter-field">
+        <label class="filter-label">Cuisine</label>
+        <select class="form-select filter-select" [(ngModel)]="selectedCuisine" (ngModelChange)="filterRestaurants()">
+          <option value="ALL">All cuisines</option>
+          <option *ngFor="let cuisine of availableCuisines" [value]="cuisine">{{ cuisine }}</option>
+        </select>
+      </div>
+
+      <div class="filter-field">
+        <label class="filter-label">Sort by</label>
+        <select class="form-select filter-select" [(ngModel)]="sortBy" (ngModelChange)="filterRestaurants()">
+          <option value="featured">Top rated</option>
+          <option value="delivery">Fastest delivery</option>
+          <option value="min-order">Lowest min order</option>
+          <option value="rating">Highest rating</option>
+        </select>
+      </div>
+
+      <label class="filter-toggle">
+        <input type="checkbox" [(ngModel)]="showOpenOnly" (ngModelChange)="filterRestaurants()">
+        <span>Open now only</span>
+      </label>
+    </div>
+  </div>
+
+  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 animate-fade-in">
+    <div class="col" *ngFor="let res of filteredRestaurants; let i = index" [style.animation-delay]="(i * 0.1) + 's'">
+      <div class="card interactive-card h-100 overflow-hidden">
+        <div class="position-relative">
+          <img [src]="res.imageUrl || 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=400&h=200'" class="card-img-top" alt="Restaurant Image" style="height: 220px; object-fit: cover;">
+          <div class="position-absolute top-0 end-0 m-3 z-3">
+             <span class="badge bg-white text-dark shadow-sm px-3 py-2 fs-6 rounded-pill"><i class="bi bi-star-fill text-warning me-1"></i>{{ res.avgRating || res.rating || 'New' }}</span>
+          </div>
+        </div>
+        <div class="card-body p-4 d-flex flex-column">
+           <h4 class="card-title fw-bold text-dark mb-2 text-truncate">{{ res.name || 'Unknown Restaurant' }}</h4>
+           <p class="card-text text-secondary mb-3"><i class="bi bi-diagram-3-fill me-2" style="color: var(--qb-primary);"></i>{{ res.cuisine || res.cuisineType || 'Mixed Cuisine' }}</p>
+           <p class="card-text text-muted small mb-4 text-truncate mt-auto"><i class="bi bi-geo-alt-fill me-2" style="color: var(--qb-accent);"></i>{{ res.city ? (res.address + ', ' + res.city) : (res.address || 'Address not listed') }}</p>
+           <a [routerLink]="['/restaurant', res.restaurantId || res.id]" class="btn btn-outline-primary w-100">View Menu</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="filteredRestaurants.length === 0 && !isLoading" class="text-center mt-5 text-muted px-4 py-5 bg-white rounded-4 shadow-sm">
+    <i class="bi bi-shop display-1 d-block mb-3 opacity-25"></i>
+    <h3 class="fw-bold">No restaurants found</h3>
+    <p>Try adjusting your search criteria or check back later!</p>
+  </div>
+  
+  <div *ngIf="isLoading" class="d-flex justify-content-center align-items-center mt-5 py-5">
+    <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+</div>

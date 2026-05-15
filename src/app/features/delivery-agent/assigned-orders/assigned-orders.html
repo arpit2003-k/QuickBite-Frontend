@@ -1,0 +1,132 @@
+<div class="container my-5 fade-in">
+  <div class="d-flex justify-content-between align-items-center mb-5">
+    <div>
+      <h2 class="display-5 fw-bold mb-0">Assigned Tasks</h2>
+      <p class="text-muted fs-5">Active deliveries ready for action</p>
+    </div>
+    <button class="btn btn-outline-secondary rounded-pill px-4 fw-bold shadow-sm" (click)="loadOrders()">
+      <i class="bi bi-arrow-clockwise me-2"></i>Refresh
+    </button>
+  </div>
+
+  <div *ngIf="loading" class="text-center py-5">
+    <div class="spinner-border text-danger" role="status"></div>
+  </div>
+
+  <div *ngIf="!loading && activeOrders.length === 0" class="text-center py-5 bg-white rounded-5 shadow-sm border border-dashed">
+    <i class="bi bi-bicycle display-1 text-muted mb-4 d-block"></i>
+    <h3 class="fw-bold">No active tasks</h3>
+    <p class="text-secondary fs-5">Once a restaurant prepares an order, it will appear here.</p>
+  </div>
+
+  <div class="row g-4" *ngIf="!loading && activeOrders.length > 0">
+    <div class="col-12" *ngFor="let order of activeOrders">
+      <div class="card border-0 shadow-sm rounded-4 task-card overflow-hidden">
+        <div class="card-body p-4 p-md-5">
+          <div class="row align-items-center">
+            <div class="col-md-3">
+              <p class="text-muted small fw-bold text-uppercase mb-1">Order #</p>
+              <h4 class="fw-bold mb-3">{{ order.orderNumber || order.id }}</h4>
+              <span class="badge bg-indigo rounded-pill px-3 py-2 fw-bold shadow-sm">
+                 {{ order.orderStatus || 'READY' }}
+              </span>
+            </div>
+
+            <div class="col-md-7 border-start border-light ps-md-5">
+              <div class="mb-4">
+                <p class="text-muted small fw-bold text-uppercase mb-1">Pickup From</p>
+                <div class="d-flex">
+                   <i class="bi bi-shop text-danger me-3 fs-3"></i>
+                   <div>
+                      <h5 class="fw-bold mb-0">{{ order.restaurantName || 'Restaurant Partner' }}</h5>
+                      <p class="text-secondary small mb-0">{{ order.pickupAddress || order.restaurantAddress || 'Loading address...' }}</p>
+                   </div>
+                </div>
+              </div>
+
+              <div>
+                <p class="text-muted small fw-bold text-uppercase mb-1">Deliver To</p>
+                <div class="d-flex">
+                   <i class="bi bi-geo-alt-fill text-success me-3 fs-3"></i>
+                   <div>
+                      <h5 class="fw-bold mb-0">{{ order.customerName || 'Hungry Customer' }}</h5>
+                      <p class="text-secondary small mb-0">{{ order.deliveryAddress }}</p>
+                   </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-2 text-md-end mt-4 mt-md-0">
+               <div *ngIf="order.orderStatus === 'PLACED' || order.orderStatus === 'CONFIRMED' || order.orderStatus === 'PREPARING'">
+                  <button class="btn btn-warning rounded-pill w-100 py-3 fw-bold shadow-sm mb-2"
+                          (click)="updateStatus(order.orderId || order.id, 'PICKED_UP')">
+                     <i class="bi bi-box-seam me-2"></i>Pick Up
+                  </button>
+               </div>
+
+               <div *ngIf="order.orderStatus === 'PICKED_UP'">
+                  <button class="btn btn-danger rounded-pill w-100 py-3 fw-bold shadow-sm"
+                          (click)="updateStatus(order.orderId || order.id, 'DELIVERED')">
+                     <i class="bi bi-bicycle me-2"></i>Mark Delivered
+                  </button>
+               </div>
+
+               <div *ngIf="order.orderStatus === 'DELIVERED'" class="text-success fw-bold text-center">
+                  <i class="bi bi-check2-circle me-2"></i>Completed
+               </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section class="past-deliveries mt-5" *ngIf="!loading">
+    <div class="d-flex justify-content-between align-items-end mb-4 flex-wrap gap-2">
+      <div>
+        <h3 class="fw-bold mb-1">Past Deliveries</h3>
+        <p class="text-muted mb-0">A quick look at recently completed drop-offs.</p>
+      </div>
+      <div class="d-flex align-items-center gap-2 flex-wrap">
+        <span class="history-badge">{{ pastDeliveries.length }} completed</span>
+        <button
+          *ngIf="pastDeliveries.length > 8"
+          type="button"
+          class="btn btn-sm btn-outline-primary rounded-pill history-toggle"
+          (click)="togglePastDeliveries()">
+          {{ showAllPastDeliveries ? 'Show Less' : 'View All' }}
+        </button>
+      </div>
+    </div>
+
+    <div *ngIf="pastDeliveries.length === 0" class="history-empty">
+      <i class="bi bi-clock-history me-2"></i>No completed deliveries yet.
+    </div>
+
+    <div class="history-list" *ngIf="pastDeliveries.length > 0">
+      <div class="history-card" *ngFor="let order of visiblePastDeliveries">
+        <div class="history-top">
+          <div>
+            <div class="history-label">Order #</div>
+            <div class="history-order">{{ order.orderNumber || order.id }}</div>
+          </div>
+          <span class="history-status">Delivered</span>
+        </div>
+        <div class="history-body">
+          <div class="history-line">
+            <i class="bi bi-shop"></i>
+            <span>{{ order.restaurantName || 'Restaurant Partner' }}</span>
+          </div>
+          <div class="history-line">
+            <i class="bi bi-geo-alt"></i>
+            <span>{{ order.deliveryAddress }}</span>
+          </div>
+          <div class="history-line">
+            <i class="bi bi-calendar-check"></i>
+            <span>{{ (order.deliveredAt || order.orderDate) | date:'medium' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
